@@ -11,7 +11,7 @@ public class Day001 extends SolveDay {
 
     @Override
     public int solve(String textInput) {
-        ArrayList<String> lines = this.getLines(textInput, true);
+        ArrayList<String> lines = getLines(textInput);
         ArrayList<ArrayList<Integer>> data = new ArrayList<>();
         ArrayList<Integer> row;
 
@@ -23,10 +23,37 @@ public class Day001 extends SolveDay {
             data.add(row);
         }
 
-        if (this.verbose) {
+        if (verbose) {
             System.out.println(data);
         }
 
-        return 0;
+        return det(data);
+    }
+
+    protected int det(ArrayList<ArrayList<Integer>> matrix) {
+        if (matrix.size() == 1 && matrix.getFirst().size() == 1) {
+            return matrix.getFirst().getFirst();
+        }
+
+        int multiplier = 1;
+        int result = 0;
+        ArrayList<Integer> firstRow = matrix.getFirst();
+
+        for (int ix = 0; ix < firstRow.size(); ix++) {
+
+            ArrayList<ArrayList<Integer>> minor = new ArrayList<>();
+            for (int jy = 1; jy < matrix.size(); jy++) {
+                ArrayList<Integer> row = (ArrayList<Integer>) matrix.get(jy).clone();
+                row.remove(ix);
+                minor.add(row);
+            }
+            if (verbose) {
+                System.out.println(minor);
+            }
+            result += multiplier * firstRow.get(ix) * det(minor);
+            multiplier *= -1;
+        }
+
+        return result;
     }
 }
