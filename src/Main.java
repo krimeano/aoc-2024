@@ -1,5 +1,5 @@
-import days.day00.Day001;
-import days.day00.Day002;
+import days.SolutionFactory;
+import days.my_lib.NoDayException;
 import days.my_lib.SolveDay;
 
 import java.io.IOException;
@@ -10,33 +10,31 @@ import java.nio.file.Paths;
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 class Main {
-    public static void main(String[] args) throws IOException, URISyntaxException {
-        int result;
-        SolveDay day;
+    public static void main(String[] args) throws IOException, URISyntaxException, NoDayException {
+        int currentDay = 1;
 
-        int currentDay = 0;
+        String textInput = loadFile(currentDay);
+        for (SolveDay solution : SolutionFactory.getDay(currentDay)) {
+            System.out.println(solution.solve(textInput));
+        }
+    }
 
-        String dayPrefix = currentDay < 10 ? "0" : "";
+    /**
+     * @param day int
+     * @return String
+     * @throws IOException        XXX
+     * @throws URISyntaxException XXX
+     */
+    private static String loadFile(int day) throws IOException, URISyntaxException {
+        String dayPrefix = day < 10 ? "0" : "";
 
-        String textInput = Files.readString(
+        return Files.readString(
                 Paths.get(
                         Main.class
-                                .getResource(dayPrefix + currentDay + ".txt")
+                                .getResource(dayPrefix + day + ".txt")
                                 .toURI()
                 )
         );
 
-        {
-            day = new Day001(false);
-            result = day.solve(textInput);
-            System.out.println(result);
-        }
-
-        {
-            day = new Day002(false);
-            result = day.solve(textInput);
-
-            System.out.println(result);
-        }
     }
 }
