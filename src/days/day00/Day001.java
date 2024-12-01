@@ -3,6 +3,7 @@ package days.day00;
 import days.my_lib.SolveDay;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 public class Day001 extends SolveDay {
     public Day001(boolean verbose) {
@@ -12,11 +13,11 @@ public class Day001 extends SolveDay {
     @Override
     public int solve(String textInput) {
         ArrayList<String> lines = getLines(textInput);
-        ArrayList<ArrayList<Integer>> data = new ArrayList<>();
-        ArrayList<Integer> row;
+        Vector<Vector<Integer>> data = new Vector<>();
+        Vector<Integer> row;
 
         for (String line : lines) {
-            row = new ArrayList<>();
+            row = new Vector<>();
             for (String word : line.split(" +")) {
                 row.add(Integer.parseInt(word));
             }
@@ -30,20 +31,20 @@ public class Day001 extends SolveDay {
         return det(data);
     }
 
-    protected int det(ArrayList<ArrayList<Integer>> matrix) {
+    protected int det(Vector<Vector<Integer>> matrix) {
         if (matrix.size() == 1 && matrix.getFirst().size() == 1) {
             return matrix.getFirst().getFirst();
         }
 
         int multiplier = 1;
         int result = 0;
-        ArrayList<Integer> firstRow = matrix.getFirst();
+        Vector<Integer> firstRow = matrix.getFirst();
 
         for (int ix = 0; ix < firstRow.size(); ix++) {
 
-            ArrayList<ArrayList<Integer>> minor = new ArrayList<>();
+            Vector<Vector<Integer>> minor = new Vector<>();
             for (int jy = 1; jy < matrix.size(); jy++) {
-                ArrayList<Integer> row = (ArrayList<Integer>) matrix.get(jy).clone();
+                Vector<Integer> row = (Vector<Integer>) matrix.get(jy).clone();
                 row.remove(ix);
                 minor.add(row);
             }
