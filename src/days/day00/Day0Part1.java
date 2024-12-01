@@ -5,8 +5,8 @@ import days.my_lib.SolveDay;
 import java.util.ArrayList;
 import java.util.Vector;
 
-public class Day001 extends SolveDay {
-    public Day001(boolean verbose) {
+public class Day0Part1 extends SolveDay {
+    public Day0Part1(boolean verbose) {
         super(verbose);
     }
 

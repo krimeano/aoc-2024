@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class Day011Test {
+class Day1Part1Test {
     String TEST_INPUT = """
             3   4
             4   3
@@ -16,6 +16,6 @@ class Day011Test {
 
     @Test
     void solve() {
-        assertEquals(11, new Day011(true).solve(TEST_INPUT));
+        assertEquals(11, new Day1Part1(true).solve(TEST_INPUT));
     }
 }

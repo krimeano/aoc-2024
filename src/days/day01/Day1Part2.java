@@ -2,9 +2,9 @@ package days.day01;
 
 import days.my_lib.SolveDay;
 
-public class Day012 extends SolveDay {
+public class Day1Part2 extends SolveDay {
 
-    public Day012(boolean verbose) {
+    public Day1Part2(boolean verbose) {
         super(verbose);
     }
 
