@@ -14,7 +14,7 @@ class Main {
         int currentDay = 2;
 
         String textInput = loadFile(currentDay);
-        for (SolveDay solution : SolutionFactory.getDay(currentDay, true)) {
+        for (SolveDay solution : SolutionFactory.getDay(currentDay)) {
             System.out.println(solution.solve(textInput));
         }
     }
