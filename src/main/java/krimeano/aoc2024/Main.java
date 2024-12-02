@@ -35,7 +35,7 @@ class Main {
         return Files.readString(
                 Paths.get(
                         Main.class
-                                .getResource(dayPrefix + day + ".txt")
+                                .getResource("../../" + dayPrefix + day + ".txt")
                                 .toURI()
                 )
         );
