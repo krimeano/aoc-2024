@@ -2,10 +2,12 @@ package days.day02;
 
 import days.my_lib.SolveDay;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Vector;
 
 public class Day2Part2 extends SolveDay {
-
+    /* @todo trend can be = 0*/
     private static final int[] DOWN_LIMITS = {-3, -1};
     private static final int[] UP_LIMITS = {1, 3};
 
@@ -16,7 +18,9 @@ public class Day2Part2 extends SolveDay {
     @Override
     public int solve(String textInput) {
         int result = 0;
-        for (String line : getLines(textInput)) {
+        ArrayList<String> lines = getLines(textInput);
+        Collections.sort(lines);
+        for (String line : lines) {
             if (verbose) {
                 System.out.println();
                 System.out.println(line);
@@ -104,6 +108,7 @@ public class Day2Part2 extends SolveDay {
                     onceFixed = true;
                     continue;
                 }
+
                 if (verbose) {
                     System.out.println("    " + change + " is merged to value " + fixedChange + "; unsafe!");
                 }
