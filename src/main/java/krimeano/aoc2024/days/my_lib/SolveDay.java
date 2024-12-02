@@ -1,6 +1,7 @@
 package krimeano.aoc2024.days.my_lib;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 public abstract class SolveDay implements SolveDayInterface {
 
@@ -10,6 +11,19 @@ public abstract class SolveDay implements SolveDayInterface {
 
     public SolveDay(boolean verbose) {
         this.verbose = verbose;
+    }
+
+
+    protected Vector<Vector<Integer>> getMatrix(String textInput) {
+        Vector<Vector<Integer>> result = new Vector<>();
+        for (String line : getLines(textInput)) {
+            Vector<Integer> row = new Vector<>();
+            for (String word : line.split(" +")) {
+                row.add(Integer.parseInt(word));
+            }
+            result.add(row);
+        }
+        return result;
     }
 
     protected ArrayList<String> getLines(String textInput) {
@@ -28,6 +42,4 @@ public abstract class SolveDay implements SolveDayInterface {
         }
         return lines;
     }
-
-
 }

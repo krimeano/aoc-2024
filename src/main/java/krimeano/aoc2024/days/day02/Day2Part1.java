@@ -2,7 +2,14 @@ package krimeano.aoc2024.days.day02;
 
 import krimeano.aoc2024.days.my_lib.SolveDay;
 
+import java.util.Iterator;
+import java.util.Vector;
+
 public class Day2Part1 extends SolveDay {
+    protected static final int TOP = 3;
+    protected static final int EXCLUDE = 0;
+    protected static final int BOTTOM = -3;
+
     public Day2Part1(boolean verbose) {
         super(verbose);
     }
@@ -10,32 +17,51 @@ public class Day2Part1 extends SolveDay {
     @Override
     public int solve(String textInput) {
         int result = 0;
-        for (String line : getLines(textInput)) {
-            int diffMin = Integer.MAX_VALUE;
-            int diffMax = Integer.MIN_VALUE;
-            String[] words = line.split(" ");
-            int prev = Integer.parseInt(words[0]);
 
-            for (int i = 1; i < words.length; i++) {
-                int current = Integer.parseInt(words[i]);
-                int diff = current - prev;
-
-                if (diff < diffMin) {
-                    diffMin = diff;
-                }
-
-                if (diff > diffMax) {
-                    diffMax = diff;
-                }
-
-                prev = current;
-            }
-
-            if ((diffMin >= -3 && diffMax <= -1) || (diffMin >= 1 && diffMax <= 3)) {
+        for (Vector<Integer> reactor : getMatrix(textInput)) {
+            if (isSafe(reactor)) {
                 result++;
             }
         }
 
         return result;
     }
+
+    protected boolean isSafe(Vector<Integer> reactor) {
+        Iterator<Integer> iterator = reactor.iterator();
+        if (iterator.hasNext()) {
+            int prev = iterator.next();
+            int current = iterator.next();
+            int prevDiff = current - prev;
+
+            if (invalidChange(prevDiff)) {
+                return false;
+            }
+
+            prev = current;
+
+            while (iterator.hasNext()) {
+                current = iterator.next();
+                int diff = current - prev;
+
+                if (invalidChange(diff, prevDiff)) {
+                    return false;
+                }
+
+                prev = current;
+                prevDiff = diff;
+            }
+
+        }
+        return true;
+    }
+
+    protected boolean invalidChange(int diff) {
+        return diff < BOTTOM || diff == EXCLUDE || diff > TOP;
+    }
+
+    protected boolean invalidChange(int diff, int prevDiff) {
+        return diff * prevDiff <= 0 || invalidChange(diff);
+    }
+
 }
