@@ -39,9 +39,9 @@ public class Day2Part2 extends SolveDay {
                 int diff = current - prev;
                 changes.add(diff);
 
-                if ((diff >= DOWN_LIMITS[0]) && (diff <= DOWN_LIMITS[1])) {
+                if (diff < 0) {
                     trend--;
-                } else if ((diff >= UP_LIMITS[0]) && (diff <= UP_LIMITS[1])) {
+                } else if (diff > 0) {
                     trend++;
                 }
 
