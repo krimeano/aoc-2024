@@ -9,18 +9,23 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 class Main {
     private static final boolean DEBUG = true;
 
-    public static void main(String[] args) throws IOException, URISyntaxException, NoDayException {
-        int currentDay = 2;
+    public static void main(String[] args) {
+        int currentDay = 1;
 
-        String textInput = loadFile(currentDay);
-        for (SolveDay solution : SolutionFactory.getDay(currentDay, DEBUG)) {
-            System.out.println(solution.solve(textInput));
+        try {
+            String textInput = loadFile(currentDay);
+            for (SolveDay solution : SolutionFactory.getDay(currentDay, DEBUG)) {
+                System.out.println(solution.solve(textInput));
+            }
+        } catch (IOException | URISyntaxException error) {
+            System.err.println("Can't load file: " + error.getMessage());
+        } catch (NoDayException error) {
+            System.err.println("Solution not found: " + error.getMessage());
         }
+
     }
 
     /**
