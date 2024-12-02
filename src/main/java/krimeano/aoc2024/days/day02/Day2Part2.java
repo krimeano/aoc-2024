@@ -1,9 +1,8 @@
-package days.day02;
+package krimeano.aoc2024.days.day02;
 
-import days.my_lib.SolveDay;
+import krimeano.aoc2024.days.my_lib.SolveDay;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Vector;
 
 public class Day2Part2 extends SolveDay {
@@ -19,7 +18,9 @@ public class Day2Part2 extends SolveDay {
     public int solve(String textInput) {
         int result = 0;
         ArrayList<String> lines = getLines(textInput);
-        Collections.sort(lines);
+        if (verbose) {
+            System.out.println("parsed " + lines.size() + " lines");
+        }
         for (String line : lines) {
             if (verbose) {
                 System.out.println();
@@ -55,7 +56,7 @@ public class Day2Part2 extends SolveDay {
 
             boolean isSafe = true;
 
-            int[] current_limits = trend < 0 ? DOWN_LIMITS : UP_LIMITS;
+            int[] current_limits = trend <= 0 ? DOWN_LIMITS : UP_LIMITS;
             boolean onceFixed = false;
             Vector<Integer> fixedChanges = new Vector<>();
 

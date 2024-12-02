@@ -1,4 +1,4 @@
-package days.day00;
+package krimeano.aoc2024.days.day00;
 
 import org.junit.jupiter.api.Test;
 

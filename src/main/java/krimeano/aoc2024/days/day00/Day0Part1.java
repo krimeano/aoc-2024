@@ -1,6 +1,6 @@
-package days.day00;
+package krimeano.aoc2024.days.day00;
 
-import days.my_lib.SolveDay;
+import krimeano.aoc2024.days.my_lib.SolveDay;
 
 import java.util.ArrayList;
 import java.util.Vector;

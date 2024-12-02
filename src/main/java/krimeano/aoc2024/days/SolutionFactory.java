@@ -1,13 +1,13 @@
-package days;
+package krimeano.aoc2024.days;
 
-import days.day00.Day0Part1;
-import days.day00.Day0Part2;
-import days.day01.Day1Part1;
-import days.day01.Day1Part2;
-import days.day02.Day2Part1;
-import days.day02.Day2Part2;
-import days.my_lib.NoDayException;
-import days.my_lib.SolveDay;
+import krimeano.aoc2024.days.day00.Day0Part1;
+import krimeano.aoc2024.days.day00.Day0Part2;
+import krimeano.aoc2024.days.day01.Day1Part1;
+import krimeano.aoc2024.days.day01.Day1Part2;
+import krimeano.aoc2024.days.day02.Day2Part1;
+import krimeano.aoc2024.days.day02.Day2Part2;
+import krimeano.aoc2024.days.my_lib.NoDayException;
+import krimeano.aoc2024.days.my_lib.SolveDay;
 
 public class SolutionFactory {
 

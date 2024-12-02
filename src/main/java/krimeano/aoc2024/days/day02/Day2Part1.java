@@ -1,6 +1,6 @@
-package days.day02;
+package krimeano.aoc2024.days.day02;
 
-import days.my_lib.SolveDay;
+import krimeano.aoc2024.days.my_lib.SolveDay;
 
 public class Day2Part1 extends SolveDay {
     public Day2Part1(boolean verbose) {

@@ -1,6 +1,6 @@
-package days.day01;
+package krimeano.aoc2024.days.day01;
 
-import days.my_lib.SolveDay;
+import krimeano.aoc2024.days.my_lib.SolveDay;
 
 import java.util.HashMap;
 import java.util.PriorityQueue;
