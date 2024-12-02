@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 class Main {
     public static void main(String[] args) throws IOException, URISyntaxException, NoDayException {
-        int currentDay = 1;
+        int currentDay = 2;
 
         String textInput = loadFile(currentDay);
         for (SolveDay solution : SolutionFactory.getDay(currentDay)) {
