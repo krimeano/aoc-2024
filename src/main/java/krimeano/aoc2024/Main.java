@@ -10,10 +10,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 class Main {
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     public static void main(String[] args) {
-        int currentDay = 1;
+        int currentDay = 3;
 
         try {
             String textInput = loadFile(currentDay);
@@ -40,7 +40,7 @@ class Main {
         return Files.readString(
                 Paths.get(
                         Main.class
-                                .getResource("../../" + dayPrefix + day + ".txt")
+                                .getResource("../../input/" + dayPrefix + day + ".txt")
                                 .toURI()
                 )
         );

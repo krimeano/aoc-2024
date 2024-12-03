@@ -2,9 +2,9 @@ package krimeano.aoc2024.days.day02;
 
 import java.util.Vector;
 
-public class Day2Part2 extends Day2Part1 {
+public class Day2x2 extends Day2x1 {
 
-    public Day2Part2(boolean verbose) {
+    public Day2x2(boolean verbose) {
         super(verbose);
     }
 

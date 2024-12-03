@@ -5,12 +5,12 @@ import krimeano.aoc2024.days.my_lib.SolveDay;
 import java.util.Iterator;
 import java.util.Vector;
 
-public class Day2Part1 extends SolveDay {
+public class Day2x1 extends SolveDay {
     protected static final int TOP = 3;
     protected static final int EXCLUDE = 0;
     protected static final int BOTTOM = -3;
 
-    public Day2Part1(boolean verbose) {
+    public Day2x1(boolean verbose) {
         super(verbose);
     }
 

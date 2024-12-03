@@ -5,8 +5,8 @@ import krimeano.aoc2024.days.my_lib.SolveDay;
 import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 
-public class Day1Part1 extends SolveDay {
-    public Day1Part1(boolean verbose) {
+public class Day1x1 extends SolveDay {
+    public Day1x1(boolean verbose) {
         super(verbose);
     }
 

@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.PriorityQueue;
 
 
-public class Day1Part2 extends SolveDay {
-    public Day1Part2(boolean verbose) {
+public class Day1x2 extends SolveDay {
+    public Day1x2(boolean verbose) {
         super(verbose);
     }
 
