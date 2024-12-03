@@ -24,7 +24,7 @@ public class Day3x1 extends SolveDay {
         return result;
     }
 
-    private Vector<Vector<Integer>> findMul(String line) {
+    protected Vector<Vector<Integer>> findMul(String line) {
         Vector<Vector<Integer>> result = new Vector<>();
         int ix = 0;
         int search_state = 0; /* 0 - look for next mul(, 1 - look for comma, 2 - look for trailing ) */
