@@ -1,6 +1,6 @@
 package krimeano.aoc2024.days.day05;
 
-enum ReadingMode {
+public enum ReadingMode {
     RULES,
     DATA
 }
