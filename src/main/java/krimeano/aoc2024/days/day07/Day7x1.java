@@ -9,7 +9,7 @@ public class Day7x1 extends SolveDay {
 
     @Override
     public int solve(String textInput) {
-        int result = 0;
+        long result = 0;
         try {
             for (String line : getLines(textInput)) {
                 Equation equation = new Equation(verbose, line);
@@ -20,6 +20,7 @@ public class Day7x1 extends SolveDay {
         } catch (ParseEquationException e) {
             System.err.println("Parsing error: " + e.getMessage());
         }
-        return result;
+        System.out.println(result);
+        return 0;
     }
 }

@@ -5,11 +5,11 @@ import java.util.Iterator;
 
 public class Equation {
     public boolean verbose = false;
-    public int testValue;
-    public int prefixValue = 0;
-    public int currentValue = 0;
-    public ArrayList<Integer> suffixItems;
-    public int suffixSum = 0;
+    public long testValue;
+    public long prefixValue;
+    public long currentValue;
+    public ArrayList<Long> suffixItems;
+    public long suffixSum;
     public String stringRepresentation = "";
 
     public Equation(boolean verbose, String input) throws ParseEquationException {
@@ -22,14 +22,14 @@ public class Equation {
             throw new ParseEquationException();
         }
         try {
-            testValue = Integer.parseInt(parts[0]);
-            prefixValue = 0;
-            currentValue = 0;
+            testValue = Long.parseLong(parts[0]);
+            prefixValue = 0L;
+            currentValue = 0L;
             suffixItems = new ArrayList<>();
             suffixSum = 0;
 
             for (String strItem : parts[1].split(" ")) {
-                int item = Integer.parseInt(strItem);
+                long item = Long.parseLong(strItem);
                 if (currentValue == 0) {
                     stringRepresentation += item;
                     currentValue = item;
@@ -42,13 +42,15 @@ public class Equation {
             throw new ParseEquationException(e.getMessage());
         }
 
-        System.out.println("testValue: " + testValue);
-        System.out.println("currentValue: " + currentValue);
-        System.out.println("suffixItems: " + suffixItems);
-        System.out.println("suffixSum: " + suffixSum);
+        if (verbose) {
+            System.out.println("testValue: " + testValue);
+            System.out.println("currentValue: " + currentValue);
+            System.out.println("suffixItems: " + suffixItems);
+            System.out.println("suffixSum: " + suffixSum);
+        }
     }
 
-    public Equation(boolean verbose, int testValue, int prefixValue, int currentValue, ArrayList<Integer> suffixItems, int suffixSum, String stringRepresentation) {
+    public Equation(boolean verbose, long testValue, long prefixValue, long currentValue, ArrayList<Long> suffixItems, long suffixSum, String stringRepresentation) {
         this.verbose = verbose;
         this.testValue = testValue;
         this.prefixValue = prefixValue;
@@ -77,9 +79,9 @@ public class Equation {
 
             return false;
         }
-        Iterator<Integer> iterator;
-        int firstItem;
-        ArrayList<Integer> remainderItems;
+        Iterator<Long> iterator;
+        long firstItem;
+        ArrayList<Long> remainderItems;
 
         /* add */
         iterator = suffixItems.iterator();
@@ -92,8 +94,8 @@ public class Equation {
         Equation a = new Equation(
                 verbose,
                 testValue,
-                prefixValue + currentValue,
-                firstItem,
+                prefixValue,
+                currentValue + firstItem,
                 remainderItems,
                 suffixSum - firstItem,
                 stringRepresentation + " + " + firstItem
