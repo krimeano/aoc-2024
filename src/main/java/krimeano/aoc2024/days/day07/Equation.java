@@ -72,13 +72,6 @@ public class Equation {
             }
             return result;
         }
-        if (prefixValue + currentValue + suffixSum > testValue) {
-            if (verbose) {
-                System.out.println(stringRepresentation + " + " + suffixItems + " > " + testValue);
-            }
-
-            return false;
-        }
         Iterator<Long> iterator;
         long firstItem;
         ArrayList<Long> remainderItems;
