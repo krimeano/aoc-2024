@@ -38,8 +38,7 @@ public class Day8x1 extends SolveDay {
                 }
                 if (antennas.containsKey(antenna)) {
                     for (int[] xy : antennas.get(antenna)) {
-                        addAntinode(2 * xy[0] - i, 2 * xy[1] - j, antenna);
-                        addAntinode(2 * i - xy[0], 2 * j - xy[1], antenna);
+                        findAntinodes(xy[0], xy[1], i, j, antenna);
                     }
                 } else {
                     antennas.put(antenna, new ArrayList<>());
@@ -51,6 +50,11 @@ public class Day8x1 extends SolveDay {
             System.out.println(antinodes);
         }
         return antinodes.size();
+    }
+
+    protected void findAntinodes(int x0, int y0, int x1, int y1, char antenna) {
+        addAntinode(2 * x0 - x1, 2 * y0 - y1, antenna);
+        addAntinode(2 * x1 - x0, 2 * y1 - y0, antenna);
     }
 
     protected void addAntinode(int x, int y, char antenna) {
