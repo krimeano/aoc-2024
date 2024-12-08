@@ -6,16 +6,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class Day4x2Test {
     String TEST_INPUT = """
-                     MMMSXXMASM
-                     MSAMXMSMSA
-                     AMXSXMAAMM
-                     MSAMASMSMX
-                     XMASAMXAMM
-                     XXAMMXXAMA
-                     SMSMSASXSS
-                     SAXAMASAAA
-                     MAMMMXMMMM
-                     MXMXAXMASX
+            MMMSXXMASM
+            MSAMXMSMSA
+            AMXSXMAAMM
+            MSAMASMSMX
+            XMASAMXAMM
+            XXAMMXXAMA
+            SMSMSASXSS
+            SAXAMASAAA
+            MAMMMXMMMM
+            MXMXAXMASX
             """;
 
     @Test
