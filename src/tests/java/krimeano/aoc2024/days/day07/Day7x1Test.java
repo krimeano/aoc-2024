@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class Day7x1Test {
-    String TEST_INPUT = """
+    protected static final String TEST_INPUT = """
             190: 10 19
             3267: 81 40 27
             83: 17 5

@@ -9,10 +9,14 @@ public class Day7x1 extends SolveDay {
 
     @Override
     public int solve(String textInput) {
+        return (int) solveLong(textInput, false);
+    }
+
+    public long solveLong(String textInput, boolean allowConcatenation) {
         long result = 0;
         try {
             for (String line : getLines(textInput)) {
-                Equation equation = new Equation(verbose, line);
+                Equation equation = new Equation(verbose, line, allowConcatenation);
                 if (equation.calibrates()) {
                     result += equation.testValue;
                 }
@@ -21,6 +25,6 @@ public class Day7x1 extends SolveDay {
             System.err.println("Parsing error: " + e.getMessage());
         }
         System.out.println(result);
-        return 0;
+        return result;
     }
 }

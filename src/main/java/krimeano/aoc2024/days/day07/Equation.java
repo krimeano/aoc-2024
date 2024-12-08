@@ -4,16 +4,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Equation {
-    public boolean verbose = false;
+    public boolean verbose;
     public long testValue;
     public long prefixValue;
     public long currentValue;
     public ArrayList<Long> suffixItems;
     public long suffixSum;
     public String stringRepresentation = "";
+    public boolean allowConcatenation;
 
-    public Equation(boolean verbose, String input) throws ParseEquationException {
+    public Equation(boolean verbose, String input, boolean allowConcatenation) throws ParseEquationException {
         this.verbose = verbose;
+        this.allowConcatenation = allowConcatenation;
         if (verbose) {
             System.out.println();
         }
@@ -50,7 +52,7 @@ public class Equation {
         }
     }
 
-    public Equation(boolean verbose, long testValue, long prefixValue, long currentValue, ArrayList<Long> suffixItems, long suffixSum, String stringRepresentation) {
+    public Equation(boolean verbose, long testValue, long prefixValue, long currentValue, ArrayList<Long> suffixItems, long suffixSum, String stringRepresentation, boolean allowConcatenation) {
         this.verbose = verbose;
         this.testValue = testValue;
         this.prefixValue = prefixValue;
@@ -58,6 +60,7 @@ public class Equation {
         this.suffixItems = suffixItems;
         this.suffixSum = suffixSum;
         this.stringRepresentation = stringRepresentation;
+        this.allowConcatenation = allowConcatenation;
     }
 
     public boolean calibrates() {
@@ -91,9 +94,13 @@ public class Equation {
                 currentValue + firstItem,
                 remainderItems,
                 suffixSum - firstItem,
-                stringRepresentation + " + " + firstItem
+                stringRepresentation + " + " + firstItem,
+                allowConcatenation
         );
 
+        if (a.calibrates()) {
+            return true;
+        }
         /* mul */
         iterator = suffixItems.iterator();
         firstItem = iterator.next();
@@ -101,6 +108,7 @@ public class Equation {
         while (iterator.hasNext()) {
             remainderItems.add(iterator.next());
         }
+
         Equation b = new Equation(
                 verbose,
                 testValue,
@@ -108,10 +116,36 @@ public class Equation {
                 currentValue * firstItem,
                 remainderItems,
                 suffixSum - firstItem,
-                stringRepresentation + " * " + firstItem
+                stringRepresentation + " * " + firstItem,
+                allowConcatenation
+        );
+        if (b.calibrates()) {
+            return true;
+        }
+
+        if (!allowConcatenation) {
+            return false;
+        }
+
+        /* concat */
+        iterator = suffixItems.iterator();
+        firstItem = iterator.next();
+        remainderItems = new ArrayList<>();
+        while (iterator.hasNext()) {
+            remainderItems.add(iterator.next());
+        }
+        Equation c = new Equation(
+                verbose,
+                testValue,
+                prefixValue,
+                Long.parseLong(currentValue + "" + firstItem),
+                remainderItems,
+                suffixSum - firstItem,
+                stringRepresentation + " || " + firstItem,
+                allowConcatenation
         );
 
-        return a.calibrates() || b.calibrates();
+        return c.calibrates();
     }
 
 }
