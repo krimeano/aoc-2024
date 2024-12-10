@@ -44,8 +44,10 @@ public class Day9x1 extends SolveDay {
 
         while (cursor < disk.size()) {
             int value = disk.get(cursor);
-            System.out.println(cursor + "/" + disk.size() + "="+ value);
-            System.out.println(disk.subList(disk.size() - 20, disk.size()));
+            if (verbose) {
+                System.out.println(cursor + "/" + disk.size() + "=" + value);
+                System.out.println(disk.subList(disk.size() - 20, disk.size()));
+            }
             if (value != -1) {
                 result += (long) value * (long) cursor;
                 cursor++;
@@ -60,8 +62,9 @@ public class Day9x1 extends SolveDay {
             result += (long) value * (long) cursor;
             disk.set(cursor++, value);
         }
-        System.out.println(disk.subList(disk.size() - 20, disk.size()));
-
+        if (verbose) {
+            System.out.println(disk.subList(disk.size() - 20, disk.size()));
+        }
         return result;
     }
 
@@ -90,8 +93,9 @@ public class Day9x1 extends SolveDay {
             volume = ix * (position * width + width * (width - 1) / 2);
             result += volume;
             position += width;
-            System.out.println(volume + ", " + result);
-
+            if (verbose) {
+                System.out.println(volume + ", " + result);
+            }
             if (left_width == 0) {
                 left_cursor += 1;
                 left_width = line.charAt(left_cursor) - '0';
