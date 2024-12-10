@@ -15,10 +15,14 @@ public abstract class SolveDay implements SolveDayInterface {
 
 
     protected Vector<Vector<Integer>> getMatrix(String textInput) {
+        return getMatrix(textInput, " +");
+    }
+
+    protected Vector<Vector<Integer>> getMatrix(String textInput, String sep) {
         Vector<Vector<Integer>> result = new Vector<>();
         for (String line : getLines(textInput)) {
             Vector<Integer> row = new Vector<>();
-            for (String word : line.split(" +")) {
+            for (String word : line.split(sep)) {
                 row.add(Integer.parseInt(word));
             }
             result.add(row);
