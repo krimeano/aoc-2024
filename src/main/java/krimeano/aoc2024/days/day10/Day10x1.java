@@ -9,6 +9,8 @@ public class Day10x1 extends SolveDay {
 
     int height;
     int width;
+    Vector<Vector<Integer>> matrix;
+    ArrayList<int[]> zeroes;
 
     public Day10x1(boolean verbose) {
         super(verbose);
@@ -17,18 +19,8 @@ public class Day10x1 extends SolveDay {
     @Override
     public int solve(String textInput) {
         int result = 0;
-        Vector<Vector<Integer>> matrix = getMatrix(textInput, "");
-        height = matrix.size();
-        width = height > 0 ? matrix.getFirst().size() : 0;
-        ArrayList<int[]> zeroes = new ArrayList<>();
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                if (matrix.get(i).get(j) == 0) {
-                    zeroes.add(new int[]{i, j});
-                }
-            }
-        }
 
+        initSolution(textInput);
         for (int[] zero : zeroes) {
             if (verbose) {
                 System.out.println("Looking for trail from " + zero[0] + "," + zero[1]);
@@ -67,7 +59,21 @@ public class Day10x1 extends SolveDay {
         return result;
     }
 
-    public ArrayList<int[]> getNeighbours(int[] xy) {
+    protected void initSolution(String textInput) {
+        matrix = getMatrix(textInput, "");
+        height = matrix.size();
+        width = height > 0 ? matrix.getFirst().size() : 0;
+        zeroes = new ArrayList<>();
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                if (matrix.get(i).get(j) == 0) {
+                    zeroes.add(new int[]{i, j});
+                }
+            }
+        }
+    }
+
+    protected ArrayList<int[]> getNeighbours(int[] xy) {
         ArrayList<int[]> neighbours = new ArrayList<>();
         for (int[] direction : DIRECTIONS) {
             try {
@@ -79,7 +85,7 @@ public class Day10x1 extends SolveDay {
         return neighbours;
     }
 
-    public int[] getNeighbour(int[] xy, int[] direction) throws OutsideException {
+    protected int[] getNeighbour(int[] xy, int[] direction) throws OutsideException {
         int x = xy[0] + direction[0];
         int y = xy[1] + direction[1];
         if (x < 0 || y < 0 || x >= height || y >= width) {
