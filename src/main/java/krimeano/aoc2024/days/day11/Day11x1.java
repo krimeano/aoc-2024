@@ -8,7 +8,7 @@ public class Day11x1 extends SolveDay {
 
     protected static HashMap<String, HashMap<Integer, Long>> cache = new HashMap<>();
     protected static final long MULTIPLIER = 2024;
-    public static int TIMES = 25;
+    public static final int TIMES = 25;
 
     public Day11x1(boolean verbose) {
         super(verbose);
@@ -16,9 +16,13 @@ public class Day11x1 extends SolveDay {
 
     @Override
     public int solve(String textInput) {
+        return solve(textInput, TIMES);
+    }
+
+    public int solve(String textInput, int blinks) {
         long result = 0;
         for (String item : textInput.trim().split(" ")) {
-            result += getNumberOfStones(item, TIMES);
+            result += getNumberOfStones(item, blinks);
         }
         System.out.println("(long) " + result);
         return (int) result;
