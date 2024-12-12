@@ -1,5 +1,6 @@
 package krimeano.aoc2024.days.day10;
 
+import krimeano.aoc2024.days.my_lib.OutsideException;
 import krimeano.aoc2024.days.my_lib.SolveDay;
 
 import java.util.*;

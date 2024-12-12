@@ -13,7 +13,7 @@ class Main {
     private static final boolean DEBUG = false;
 
     public static void main(String[] args) {
-        int currentDay = 11;
+        int currentDay = 12;
 
         try {
             String textInput = loadFile(currentDay);
