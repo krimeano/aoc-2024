@@ -13,7 +13,7 @@ public class Day12x1 extends SolveDay {
     protected int width;
     protected HashSet<List<Integer>> notVisitedCells;
     /* list of areas, where key is coordinates and value is a fence length in this cell */
-    protected ArrayList<HashMap<List<Integer>, Integer>> areas;
+    protected ArrayList<HashMap<List<Integer>, HashSet<Character>>> areas;
 
     public Day12x1(boolean verbose) {
         super(verbose);
@@ -21,6 +21,11 @@ public class Day12x1 extends SolveDay {
 
     @Override
     public int solve(String textInput) {
+        findAreas(textInput);
+        return calculatePrice();
+    }
+
+    protected void findAreas(String textInput) {
         lines = getLines(textInput);
         height = lines.size();
         width = height > 0 ? lines.getFirst().length() : 0;
@@ -34,13 +39,12 @@ public class Day12x1 extends SolveDay {
 
         areas = new ArrayList<>();
 
-        HashMap<List<Integer>, Integer> area;
+        HashMap<List<Integer>, HashSet<Character>> area;
         List<Integer> cell;
         ArrayList<List<Integer>> currentCells;
         char currentValue;
-        int fences;
-        int perimeter;
-        int result = 0;
+        HashSet<Character> fences;
+
         while (!notVisitedCells.isEmpty()) {
             area = new HashMap<>();
             cell = notVisitedCells.iterator().next();
@@ -48,19 +52,26 @@ public class Day12x1 extends SolveDay {
             currentCells = new ArrayList<>();
             currentCells.add(cell);
             currentValue = lines.get(cell.getFirst()).charAt(cell.getLast());
-            perimeter = 0;
 
             while (!currentCells.isEmpty()) {
-                fences = 0;
+                fences = new HashSet<>();
 
                 cell = currentCells.removeFirst();
 
-                if (cell.getFirst() == 0 || cell.getFirst() == height - 1) {
-                    fences += 1;
+                if (cell.getFirst() == 0) {
+                    fences.add('N');
                 }
 
-                if (cell.getLast() == 0 || cell.getLast() == width - 1) {
-                    fences += 1;
+                if (cell.getFirst() == height - 1) {
+                    fences.add('S');
+                }
+
+                if (cell.getLast() == 0) {
+                    fences.add('W');
+                }
+
+                if (cell.getLast() == width - 1) {
+                    fences.add('E');
                 }
 
 
@@ -71,20 +82,35 @@ public class Day12x1 extends SolveDay {
                             currentCells.add(neighbour);
                         }
                     } else {
-                        fences++;
+                        if (neighbour.getFirst() < cell.getFirst()) {
+                            fences.add('N');
+                        } else if (neighbour.getFirst() > cell.getFirst()) {
+                            fences.add('S');
+                        } else if (neighbour.getLast() < cell.getLast()) {
+                            fences.add('W');
+                        } else if (neighbour.getLast() > cell.getLast()) {
+                            fences.add('E');
+                        }
                     }
                 }
-
                 area.put(cell, fences);
-                perimeter += fences;
             }
             areas.add(area);
-            result += area.size() * perimeter;
             if (verbose) {
                 System.out.println("Area " + currentValue + ": " + area);
             }
         }
+    }
 
+    protected int calculatePrice() {
+        int result = 0;
+        for (HashMap<List<Integer>, HashSet<Character>> area : areas) {
+            int perimeter = 0;
+            for (Map.Entry<List<Integer>, HashSet<Character>> entry : area.entrySet()) {
+                perimeter += entry.getValue().size();
+            }
+            result += area.size() * perimeter;
+        }
         return result;
     }
 
