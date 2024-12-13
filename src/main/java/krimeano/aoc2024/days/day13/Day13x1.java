@@ -42,9 +42,18 @@ public class Day13x1 extends SolveDay {
             System.out.println("x: " + slau[0][0] + " + " + slau[1][0] + " = " + slau[2][0]);
             System.out.println("y: " + slau[0][1] + " + " + slau[1][1] + " = " + slau[2][1]);
         }
+
+        long detP = slau[0][0] * slau[1][1] - slau[1][0] * slau[0][1];
+        if (detP == 0) {
+            if (verbose) {
+                System.out.println("detP: " + detP);
+                System.out.println("No solution");
+            }
+            return 0;
+        }
+
         long detA = slau[2][0] * slau[1][1] - slau[1][0] * slau[2][1];
         long detB = slau[0][0] * slau[2][1] - slau[2][0] * slau[0][1];
-        long detP = slau[0][0] * slau[1][1] - slau[1][0] * slau[0][1];
         if (detP < 0) {
             detA = -detA;
             detB = -detB;
