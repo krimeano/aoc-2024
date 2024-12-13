@@ -105,13 +105,17 @@ public class Day12x1 extends SolveDay {
     protected int calculatePrice() {
         int result = 0;
         for (HashMap<List<Integer>, HashSet<Character>> area : areas) {
-            int perimeter = 0;
-            for (Map.Entry<List<Integer>, HashSet<Character>> entry : area.entrySet()) {
-                perimeter += entry.getValue().size();
-            }
-            result += area.size() * perimeter;
+            result += area.size() * calculateFences(area);
         }
         return result;
+    }
+
+    protected int calculateFences(HashMap<List<Integer>, HashSet<Character>> area) {
+        int perimeter = 0;
+        for (Map.Entry<List<Integer>, HashSet<Character>> entry : area.entrySet()) {
+            perimeter += entry.getValue().size();
+        }
+        return perimeter;
     }
 
     protected ArrayList<List<Integer>> getNeighbours(List<Integer> xy) {
