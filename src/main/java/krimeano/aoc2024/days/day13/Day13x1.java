@@ -12,8 +12,8 @@ public class Day13x1 extends SolveDay {
     @Override
     public int solve(String textInput) {
         ArrayList<String> lines = getLines(textInput, true);
-        int[][] slau = {{0, 0}, {0, 0}, {0, 0}};
-        int result = 0;
+        long[][] slau = {{0, 0}, {0, 0}, {0, 0}};
+        long result = 0;
         int ix = 0;
         for (String line : lines) {
             if (line.isEmpty()) {
@@ -21,25 +21,30 @@ public class Day13x1 extends SolveDay {
             }
             String[] data = line.split(": ")[1].split(", ");
             for (int jy = 0; jy < 2; jy++) {
-                slau[ix][jy] = Integer.parseInt(data[jy].substring(2));
+                slau[ix][jy] = Long.parseLong(data[jy].substring(2));
             }
             ix++;
             if (ix == 3) {
-                result += solveSlau(slau);
+                result += solveSlau(correctSlau(slau));
                 ix = 0;
             }
         }
-        return result;
+        System.out.println(result);
+        return (int) result;
     }
 
-    protected int solveSlau(int[][] slau) {
+    public long[][] correctSlau(long[][] slau) {
+        return slau;
+    }
+
+    protected long solveSlau(long[][] slau) {
         if (verbose) {
             System.out.println("x: " + slau[0][0] + " + " + slau[1][0] + " = " + slau[2][0]);
             System.out.println("y: " + slau[0][1] + " + " + slau[1][1] + " = " + slau[2][1]);
         }
-        int detA = slau[2][0] * slau[1][1] - slau[1][0] * slau[2][1];
-        int detB = slau[0][0] * slau[2][1] - slau[2][0] * slau[0][1];
-        int detP = slau[0][0] * slau[1][1] - slau[1][0] * slau[0][1];
+        long detA = slau[2][0] * slau[1][1] - slau[1][0] * slau[2][1];
+        long detB = slau[0][0] * slau[2][1] - slau[2][0] * slau[0][1];
+        long detP = slau[0][0] * slau[1][1] - slau[1][0] * slau[0][1];
         if (detP < 0) {
             detA = -detA;
             detB = -detB;
@@ -53,8 +58,8 @@ public class Day13x1 extends SolveDay {
             }
             return 0;
         }
-        int a = detA / detP;
-        int b = detB / detP;
+        long a = detA / detP;
+        long b = detB / detP;
         if (verbose) {
             System.out.println("a = " + a + "; b = " + b);
         }

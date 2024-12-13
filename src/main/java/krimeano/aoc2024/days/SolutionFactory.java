@@ -27,6 +27,7 @@ import krimeano.aoc2024.days.day11.Day11x2;
 import krimeano.aoc2024.days.day12.Day12x1;
 import krimeano.aoc2024.days.day12.Day12x2;
 import krimeano.aoc2024.days.day13.Day13x1;
+import krimeano.aoc2024.days.day13.Day13x2;
 import krimeano.aoc2024.days.my_lib.NoDayException;
 import krimeano.aoc2024.days.my_lib.SolveDay;
 
@@ -65,7 +66,7 @@ public class SolutionFactory {
             case 12:
                 return new SolveDay[]{new Day12x1(verbose), new Day12x2(verbose)};
             case 13:
-                return new SolveDay[]{new Day13x1(verbose)};
+                return new SolveDay[]{new Day13x1(verbose), new Day13x2(verbose)};
             default:
                 throw new NoDayException("Day " + day + "not found");
         }
