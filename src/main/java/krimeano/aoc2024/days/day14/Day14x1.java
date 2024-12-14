@@ -5,6 +5,8 @@ import krimeano.aoc2024.days.my_lib.SolveDay;
 import java.util.ArrayList;
 
 public class Day14x1 extends SolveDay {
+    protected ArrayList<ArrayList<Integer>> robots;
+
     public Day14x1(boolean verbose) {
         super(verbose);
     }
@@ -25,16 +27,10 @@ public class Day14x1 extends SolveDay {
         int b = 0;
         int c = 0;
         int d = 0;
-        for (String line : getLines(textInput)) {
-
-            ArrayList<Integer> intputData = new ArrayList<>();
-            for (String part : line.split(" ")) {
-                for (String value : part.substring(2).split(",")) {
-                    intputData.add(Integer.parseInt(value));
-                }
-            }
-            int x = (intputData.get(0) + intputData.get(2) * time) % width;
-            int y = (intputData.get(1) + intputData.get(3) * time) % height;
+        robots = parseInput(textInput);
+        for (ArrayList<Integer> robot : robots) {
+            int x = (robot.get(0) + robot.get(2) * time) % width;
+            int y = (robot.get(1) + robot.get(3) * time) % height;
             if (x < 0) {
                 x += width;
             }
@@ -76,5 +72,19 @@ public class Day14x1 extends SolveDay {
             System.out.println("A = " + a + ", B = " + b + ", C = " + c + ", D = " + d);
         }
         return a * b * c * d;
+    }
+
+    protected ArrayList<ArrayList<Integer>> parseInput(String textInput) {
+        ArrayList<ArrayList<Integer>> input = new ArrayList<>();
+        for (String line : getLines(textInput)) {
+            ArrayList<Integer> inputRow = new ArrayList<>();
+            for (String part : line.split(" ")) {
+                for (String value : part.substring(2).split(",")) {
+                    inputRow.add(Integer.parseInt(value));
+                }
+            }
+            input.add(inputRow);
+        }
+        return input;
     }
 }
