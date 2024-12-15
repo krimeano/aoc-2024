@@ -35,7 +35,7 @@ public class Day15x1 extends SolveDay {
         return calculateGPS();
     }
 
-    public void readMap(String strMap) {
+    protected void readMap(String strMap) {
         ArrayList<String> lines = getLines(strMap);
         warehouse = new ArrayList<>();
         for (int i = 0; i < lines.size(); i++) {
@@ -43,19 +43,21 @@ public class Day15x1 extends SolveDay {
             String line = lines.get(i);
 
             for (int j = 0; j < line.length(); j++) {
-                char c = line.charAt(j);
-                row.add(c);
-
-                if (c == ROBOT) {
-                    robot = new int[]{i, j};
-                }
+                addWarehouseCell(row, i, j, line.charAt(j));
             }
 
             warehouse.add(row);
         }
     }
 
-    public void travel(String instructions) {
+    protected void addWarehouseCell(ArrayList<Character> row, int rowIx, int colIx, char item) {
+        row.add(item);
+        if (item == ROBOT) {
+            robot = new int[]{rowIx, colIx};
+        }
+    }
+
+    protected void travel(String instructions) {
         if (verbose) {
             System.out.println("FISH AT: " + robot[0] + "," + robot[1]);
             printWarehouse();
@@ -63,7 +65,11 @@ public class Day15x1 extends SolveDay {
         for (String line : getLines(instructions)) {
             for (char c : line.toCharArray()) {
                 try {
-                    move(c);
+                    List<Integer> direction = DIRECTIONS.get(c);
+                    if (verbose) {
+                        System.out.println("TRY MOVE " + c + " " + direction);
+                    }
+                    move(direction);
                     if (verbose) {
                         System.out.println("FISH MOVED TO: " + robot[0] + "," + robot[1]);
                         printWarehouse();
@@ -72,8 +78,7 @@ public class Day15x1 extends SolveDay {
                     if (verbose) {
                         System.out.println(e.getMessage());
                     }
-                    continue;
-                } catch (NotAFishException e) {
+                } catch (NotARobotException e) {
                     System.err.println(e.getMessage());
                     return;
                 }
@@ -81,11 +86,7 @@ public class Day15x1 extends SolveDay {
         }
     }
 
-    public void move(char directionName) throws CantMoveException, NotAFishException {
-        List<Integer> direction = DIRECTIONS.get(directionName);
-        if (verbose) {
-            System.out.println("TRY MOVE " + directionName + ": " + direction);
-        }
+    protected void move(List<Integer> direction) throws CantMoveException, NotARobotException {
         if (direction == null) {
             throw new CantMoveException();
         }
@@ -94,7 +95,7 @@ public class Day15x1 extends SolveDay {
         int beginY = robot[1];
 
         if (warehouse.get(beginX).get(beginY) != ROBOT) {
-            throw new NotAFishException();
+            throw new NotARobotException();
         }
 
         int nextX = beginX + direction.get(0);
@@ -138,12 +139,16 @@ public class Day15x1 extends SolveDay {
     }
 
     protected int calculateGPS() {
+        return calculateGPS(BOX);
+    }
+
+    protected int calculateGPS(char box) {
         int result = 0;
         for (int i = 0; i < warehouse.size(); i++) {
             ArrayList<Character> row = warehouse.get(i);
             for (int j = 0; j < row.size(); j++) {
                 char c = row.get(j);
-                if (c == BOX) {
+                if (c == box) {
                     result += i * 100 + j;
                 }
             }
