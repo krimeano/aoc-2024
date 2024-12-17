@@ -93,7 +93,6 @@ public class Day16x1 extends SolveDay {
                     continue;
                 }
 
-                List<Integer> xy = Arrays.asList(x, y);
                 List<Integer> xyz = Arrays.asList(x, y, z);
 
                 int price = 1000 * (1 - reindeerDirection[0] * direction[0] - reindeerDirection[1] * direction[1]) + 1;
@@ -108,11 +107,15 @@ public class Day16x1 extends SolveDay {
                     justChanged.add(xyz);
                 }
 
-                if (scalarScores.get(xy) > score) {
-                    scalarScores.put(Arrays.asList(x, y), score);
-                }
+                this.compareScalarScore(x0, y0, x, y, score);
             }
         }
     }
 
+    protected void compareScalarScore(int x0, int y0, int x, int y, Integer score) {
+        List<Integer> xy = Arrays.asList(x, y);
+        if (scalarScores.get(xy) > score) {
+            scalarScores.put(xy, score);
+        }
+    }
 }
