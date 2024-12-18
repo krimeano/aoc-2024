@@ -77,7 +77,9 @@ public class Computer {
             case '6' -> bdv(arg);
             case '7' -> cdv(arg);
         }
-        System.out.println("abc: " + registerA + ", " + registerB + ", " + registerC);
+        if (verbose) {
+            System.out.println("abc: " + registerA + ", " + registerB + ", " + registerC);
+        }
         steps++;
     }
 
@@ -173,7 +175,7 @@ public class Computer {
         if (verbose) {
             System.out.println("            denominator = " + denominator);
         }
-        registerB = registerB / denominator;
+        registerB = registerA / denominator;
     }
 
     /* opcode 7 */
@@ -185,7 +187,7 @@ public class Computer {
         if (verbose) {
             System.out.println("            denominator = " + denominator);
         }
-        registerC = registerC / denominator;
+        registerC = registerA / denominator;
     }
 
 }
