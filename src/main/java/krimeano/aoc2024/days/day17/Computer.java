@@ -3,12 +3,12 @@ package krimeano.aoc2024.days.day17;
 import java.util.ArrayList;
 
 public class Computer {
-    public long registerA = 0;
-    public long registerB = 0;
-    public long registerC = 0;
+    public int registerA = 0;
+    public int registerB = 0;
+    public int registerC = 0;
     public String program = "";
-    protected ArrayList<Long> output = new ArrayList<>();
-    protected byte cursor = 0;
+    protected ArrayList<Integer> output = new ArrayList<>();
+    protected int cursor = 0;
     protected boolean verbose = false;
     protected int steps = 0;
 
@@ -62,7 +62,7 @@ public class Computer {
         }
         char opcode = program.charAt(cursor);
         cursor += 2;
-        byte arg = Byte.parseByte(program.charAt(cursor) + "");
+        int arg = Integer.parseInt(program.charAt(cursor) + "");
         cursor += 2;
         if (verbose) {
             System.out.println("optcode = " + opcode + "; arg = " + arg);
@@ -94,8 +94,8 @@ public class Computer {
         return result.toString();
     }
 
-    protected long combo(byte arg) {
-        long value = switch (arg) {
+    protected int combo(int arg) {
+        int value = switch (arg) {
             case 0, 1, 2, 3 -> arg;
             case 4 -> registerA;
             case 5 -> registerB;
@@ -110,11 +110,11 @@ public class Computer {
     }
 
     /* opcode 0 */
-    protected void adv(byte arg) {
+    protected void adv(int arg) {
         if (verbose) {
             System.out.println("    adv(" + arg + ")");
         }
-        long denominator = 1L << combo(arg);
+        int denominator = 1 << combo(arg);
         if (verbose) {
             System.out.println("            denominator = " + denominator);
         }
@@ -122,15 +122,15 @@ public class Computer {
     }
 
     /* opcode 1 */
-    protected void bxl(byte arg) {
+    protected void bxl(int arg) {
         if (verbose) {
             System.out.println("    bxl(" + arg + ")");
         }
-        registerB = registerB ^ (long) arg;
+        registerB = registerB ^ arg;
     }
 
     /* opcode 2 */
-    protected void bst(byte arg) {
+    protected void bst(int arg) {
         if (verbose) {
             System.out.println("    bst(" + arg + ")");
         }
@@ -138,7 +138,7 @@ public class Computer {
     }
 
     /* opcode 3 */
-    protected void jnz(byte arg) {
+    protected void jnz(int arg) {
         if (verbose) {
             System.out.println("    jnz(" + arg + ")");
         }
@@ -149,7 +149,7 @@ public class Computer {
     }
 
     /* opcode 4 */
-    protected void bxc(byte arg) {
+    protected void bxc(int arg) {
         if (verbose) {
             System.out.println("    bxc(" + arg + ")");
         }
@@ -157,7 +157,7 @@ public class Computer {
     }
 
     /* opcode 5 */
-    protected void out(byte arg) {
+    protected void out(int arg) {
         if (verbose) {
             System.out.println("    out(" + arg + ")");
         }
@@ -165,11 +165,11 @@ public class Computer {
     }
 
     /* opcode 6 */
-    protected void bdv(byte arg) {
+    protected void bdv(int arg) {
         if (verbose) {
             System.out.println("    bdv(" + arg + ")");
         }
-        long denominator = 1L << combo(arg);
+        int denominator = 1 << combo(arg);
         if (verbose) {
             System.out.println("            denominator = " + denominator);
         }
@@ -177,14 +177,15 @@ public class Computer {
     }
 
     /* opcode 7 */
-    protected void cdv(byte arg) {
+    protected void cdv(int arg) {
         if (verbose) {
             System.out.println("    cdv(" + arg + ")");
         }
-        long denominator = 1L << combo(arg);
+        int denominator = 1 << combo(arg);
         if (verbose) {
             System.out.println("            denominator = " + denominator);
         }
         registerC = registerC / denominator;
     }
+
 }
