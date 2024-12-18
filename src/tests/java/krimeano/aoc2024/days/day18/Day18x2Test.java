@@ -2,9 +2,11 @@ package krimeano.aoc2024.days.day18;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class Day18x1Test {
+class Day18x2Test {
     protected static final String TEST_INPUT = """
             5,4
             4,2
@@ -35,6 +37,6 @@ class Day18x1Test {
 
     @Test
     void solve() {
-        assertEquals(22, new Day18x1(true).solve(TEST_INPUT, 12));
+        assertEquals(Arrays.asList((byte) 1, (byte) 6), new Day18x2(true).solveList(TEST_INPUT, 12));
     }
 }

@@ -16,7 +16,11 @@ public class Day18x1 extends SolveDay {
 
     @Override
     public int solve(String textInput) {
-        parseInput(textInput);
+        return solve(textInput, 1024);
+    }
+
+    public int solve(String textInput, int limit) {
+        parseInput(textInput, limit);
         if (verbose) {
             System.out.println(corrupted);
             printSpace();
@@ -24,7 +28,7 @@ public class Day18x1 extends SolveDay {
         return findPath();
     }
 
-    protected void parseInput(String textInput) {
+    protected void parseInput(String textInput, int limit) {
         corrupted = new HashSet<>();
         for (String line : getLines(textInput)) {
             List<Byte> xy = new ArrayList<>();
@@ -33,10 +37,10 @@ public class Day18x1 extends SolveDay {
                 if (size <= x) {
                     size = (byte) (x + 1);
                 }
-                xy.add(x);
+                xy.addFirst(x);
             }
             corrupted.add(xy);
-            if (corrupted.size() >= 1024) {
+            if (corrupted.size() >= limit) {
                 break;
             }
         }
@@ -45,7 +49,7 @@ public class Day18x1 extends SolveDay {
     protected void printSpace() {
         for (byte i = 0; i < size; i++) {
             for (byte j = 0; j < size; j++) {
-                List<Byte> xy = Arrays.asList(j, i);
+                List<Byte> xy = Arrays.asList(i, j);
                 if (corrupted.contains(xy)) {
                     System.out.print("#");
                 } else {
