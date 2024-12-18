@@ -10,10 +10,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 class Main {
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     public static void main(String[] args) {
-        int currentDay = 16;
+        int currentDay = 17;
 
         try {
             String textInput = loadFile(currentDay);
