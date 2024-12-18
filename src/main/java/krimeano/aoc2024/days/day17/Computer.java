@@ -128,7 +128,7 @@ public class Computer {
         int value = combo(arg);
 
         if (verbose) {
-            System.out.println("0 : adv(" + arg + ") : C = A >> combo(" + arg + ") : " + Integer.toBinaryString(registerA) + " >> " + value);
+            System.out.println("0 : adv(" + arg + ") : A = A >> combo(" + arg + ") : " + Integer.toBinaryString(registerA) + " >> " + value);
         }
 
         registerA = registerA >> value;
@@ -154,7 +154,7 @@ public class Computer {
     /* opcode 3 */
     protected void jnz(int arg) {
         if (verbose) {
-            System.out.print("3 : jnz(" + arg + ") : cursor = arg if A > 0 : A = " + registerA);
+            System.out.print("3 : jnz(" + arg + ") : pointer = arg if A > 0 : A = " + registerA);
         }
         if (registerA == 0) {
             if (verbose) {
@@ -192,7 +192,7 @@ public class Computer {
         if (verbose) {
             System.out.println("6 : bdv(" + arg + "): B = A >> combo(" + arg + ") : " + Integer.toBinaryString(registerA) + " >> " + value);
         }
-        registerA = registerA >> value;
+        registerB = registerA >> value;
     }
 
     /* opcode 7 */
