@@ -3,9 +3,9 @@ package krimeano.aoc2024.days.day17;
 import java.util.ArrayList;
 
 public class Computer {
-    public int registerA = 0;
-    public int registerB = 0;
-    public int registerC = 0;
+    public long registerA = 0;
+    public long registerB = 0;
+    public long registerC = 0;
     public String program = "";
     protected ArrayList<String> output = new ArrayList<>();
     protected int pointer = 0;
@@ -19,7 +19,7 @@ public class Computer {
         this.verbose = verbose;
     }
 
-    public Computer set(int registerA, int registerB, int registerC) {
+    public Computer set(long registerA, int registerB, int registerC) {
         if (verbose) {
             System.out.println();
             System.out.println("Setting: " + registerA + ", " + registerB + ", " + registerC);
@@ -45,8 +45,9 @@ public class Computer {
         while (pointer < program.length()) {
             nextStep();
         }
-
-        System.out.println();
+        if (verbose) {
+            System.out.println();
+        }
         return printOutput();
     }
 
@@ -59,7 +60,7 @@ public class Computer {
                 System.out.print(" ");
             }
             System.out.println("^_^");
-            System.out.println(" > " + Integer.toBinaryString(registerA) + ", " + Integer.toBinaryString(registerB) + ", " + Integer.toBinaryString(registerC));
+            System.out.println(" > " + Long.toBinaryString(registerA) + ", " + Long.toBinaryString(registerB) + ", " + Long.toBinaryString(registerC));
         }
         char opcode = program.charAt(pointer);
         pointer += 2;
@@ -76,7 +77,7 @@ public class Computer {
             case '7' -> cdv(arg);
         }
         if (verbose) {
-            System.out.println(" < " + Integer.toBinaryString(registerA) + ", " + Integer.toBinaryString(registerB) + ", " + Integer.toBinaryString(registerC));
+            System.out.println(" < " + Long.toBinaryString(registerA) + ", " + Long.toBinaryString(registerB) + ", " + Long.toBinaryString(registerC));
         }
         steps++;
     }
@@ -94,9 +95,9 @@ public class Computer {
         return result.toString();
     }
 
-    protected int combo(int arg) {
+    protected long combo(int arg) {
         String debugString = "";
-        int value = -1;
+        long value = -1;
         assert 0 <= arg && arg < 7;
         switch (arg) {
             case 0, 1, 2, 3:
@@ -118,17 +119,17 @@ public class Computer {
         }
 
         if (verbose) {
-            System.out.println("combo(" + arg + ") : " + debugString + " : " + value + " : " + Integer.toBinaryString(value));
+            System.out.println("combo(" + arg + ") : " + debugString + " : " + value + " : " + Long.toBinaryString(value));
         }
         return value;
     }
 
     /* opcode 0 */
     protected void adv(int arg) {
-        int value = combo(arg);
+        long value = combo(arg);
 
         if (verbose) {
-            System.out.println("0 : adv(" + arg + ") : A = A >> combo(" + arg + ") : " + Integer.toBinaryString(registerA) + " >> " + value);
+            System.out.println("0 : adv(" + arg + ") : A = A >> combo(" + arg + ") : " + Long.toBinaryString(registerA) + " >> " + value);
         }
 
         registerA = registerA >> value;
@@ -137,16 +138,16 @@ public class Computer {
     /* opcode 1 */
     protected void bxl(int arg) {
         if (verbose) {
-            System.out.println("1 : bxl(" + arg + "): B = B ^ arg : " + Integer.toBinaryString(registerB) + " ^ " + Integer.toBinaryString(arg));
+            System.out.println("1 : bxl(" + arg + "): B = B ^ arg : " + Long.toBinaryString(registerB) + " ^ " + Integer.toBinaryString(arg));
         }
         registerB = registerB ^ arg;
     }
 
     /* opcode 2 */
     protected void bst(int arg) {
-        int value = combo(arg);
+        long value = combo(arg);
         if (verbose) {
-            System.out.println("2 : bst(" + arg + ") : B = combo(" + arg + ") & 111 : " + Integer.toBinaryString(value) + " & " + Integer.toBinaryString(0b111));
+            System.out.println("2 : bst(" + arg + ") : B = combo(" + arg + ") & 111 : " + Long.toBinaryString(value) + " & " + Integer.toBinaryString(0b111));
         }
         registerB = value & 0b111;
     }
@@ -171,35 +172,35 @@ public class Computer {
     /* opcode 4 */
     protected void bxc(int arg) {
         if (verbose) {
-            System.out.println("4 : bxc(" + arg + ") : B = B ^ C : " + Integer.toBinaryString(registerB) + " ^ " + Integer.toBinaryString(registerC));
+            System.out.println("4 : bxc(" + arg + ") : B = B ^ C : " + Long.toBinaryString(registerB) + " ^ " + Long.toBinaryString(registerC));
         }
         registerB = registerB ^ registerC;
     }
 
     /* opcode 5 */
     protected void out(int arg) {
-        int value = combo(arg);
-        int item = value & 0b111;
+        long value = combo(arg);
+        byte item = (byte) (value & 0b111);
         if (verbose) {
-            System.out.println("5 : out(" + arg + ") : output combo(" + arg + ") & 111 : " + Integer.toBinaryString(value) + " & " + Integer.toBinaryString(0b111) + " = " + Integer.toBinaryString(item) + " = " + item);
+            System.out.println("5 : out(" + arg + ") : output combo(" + arg + ") & 111 : " + Long.toBinaryString(value) + " & " + Integer.toBinaryString(0b111) + " = " + Integer.toBinaryString(item) + " = " + item);
         }
-        output.add(Integer.toString(item));
+        output.add(Long.toString(item));
     }
 
     /* opcode 6 */
     protected void bdv(int arg) {
-        int value = combo(arg);
+        long value = combo(arg);
         if (verbose) {
-            System.out.println("6 : bdv(" + arg + "): B = A >> combo(" + arg + ") : " + Integer.toBinaryString(registerA) + " >> " + value);
+            System.out.println("6 : bdv(" + arg + "): B = A >> combo(" + arg + ") : " + Long.toBinaryString(registerA) + " >> " + value);
         }
         registerB = registerA >> value;
     }
 
     /* opcode 7 */
     protected void cdv(int arg) {
-        int value = combo(arg);
+        long value = combo(arg);
         if (verbose) {
-            System.out.println("7 : cdv(" + arg + "): C = A >> combo(" + arg + ") : " + Integer.toBinaryString(registerA) + " >> " + value);
+            System.out.println("7 : cdv(" + arg + "): C = A >> combo(" + arg + ") : " + Long.toBinaryString(registerA) + " >> " + value);
         }
         registerC = registerA >> value;
     }

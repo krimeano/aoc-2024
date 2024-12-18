@@ -34,7 +34,6 @@ public class Day17x1 extends SolveDay {
                     program = parts[1];
             }
         }
-        ;
         return new Computer(verbose).set(registerA, registerB, registerC).run(program);
     }
 }
