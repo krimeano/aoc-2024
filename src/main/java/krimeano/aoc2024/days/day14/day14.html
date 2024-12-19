@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Day 14: Restroom Redoubt</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: sans-serif;
+        }
+
+        article {
+            display: flex;
+            flex-direction: row;
+            height: 100vh;
+        }
+
+        main, aside {
+            padding: 1em 0 0 1em;
+        }
+
+        canvas {
+            border: 1px solid black;
+        }
+
+        textarea {
+            min-width: 30em;
+            height: 90%;
+            font-size:8px;
+        }
+
+        textarea:read-only {
+            background: #ccc;
+        }
+    </style>
+</head>
+<body>
+<article>
+    <main>
+        <canvas id="floor" width="808" height="824"></canvas>
+    </main>
+    <aside>
+    <textarea id="text-input">
+p=0,4 v=3,-3
+p=6,3 v=-1,-3
+p=10,3 v=-1,2
+p=2,0 v=2,-1
+p=0,0 v=1,3
+p=3,0 v=-2,-2
+p=7,6 v=-1,-3
+p=3,0 v=-1,-2
+p=9,3 v=2,3
+p=7,3 v=-1,2
+p=2,4 v=2,-3
+p=9,5 v=-3,-3
+</textarea>
+        <footer>
+            <button type="button" id="run">Run</button>
+            <button type="button" id="stop" disabled>Stop</button>
+        </footer>
+    </aside>
+    <aside>
+        <textarea id="debug" readonly></textarea>
+    </aside>
+</article>
+<script>
+    const ROBOT_SIZE = 8;
+    const WIDTH = 101;
+    const HEIGHT = 103;
+    const START_FROM_SECONDS = 7914;
+    const canvas = document.getElementById('floor');
+    const ctx = canvas.getContext("2d");
+    const buttonRun = document.getElementById('run');
+    const buttonStop = document.getElementById('stop');
+    const textArea = document.getElementById('text-input');
+    const textAreaDebug = document.getElementById('debug');
+
+    let isRunning = false;
+    let startTime = new Date().getTime();
+    let currentTime = new Date().getTime();
+    let robots;
+
+    const run = () => {
+        buttonRun.setAttribute('disabled', 'disabled');
+        buttonStop.removeAttribute('disabled');
+        textArea.setAttribute('readonly', 'readonly');
+        initRobots(textArea.value);
+        isRunning = true;
+        startTime = new Date().getTime();
+        tick();
+    };
+
+    function initRobots(textInput = "") {
+        robots = [];
+        textInput.split('\n').forEach((line) => {
+            line = line.trim();
+            if (line === "") {
+                return;
+            }
+            const robot = line.split(" ")
+                .map((x) => x.split("=").pop())
+                .map((x) => x.split(",").map((y) => parseInt(y)));
+            robot.push([robot[0][0], robot[0][1]])
+            robots.push(robot);
+        });
+    }
+
+    function tick() {
+        currentTime = new Date().getTime();
+        calculateRobots();
+        printDebug();
+        renderRobots();
+        if (isRunning) {
+            requestAnimationFrame(tick);
+        }
+    }
+
+    function calculateRobots() {
+        robots.forEach((x) => calculateRobot(x));
+    }
+
+    function calculateRobot(robot) {
+        const time = START_FROM_SECONDS + (currentTime - startTime) / 1000;
+        let x = (robot[0][0] + robot[1][0] * time) % WIDTH;
+        let y = (robot[0][1] + robot[1][1] * time) % HEIGHT;
+        robot[2][0] = x + (x < 0 ? WIDTH : 0);
+        robot[2][1] = y + (y < 0 ? HEIGHT : 0);
+    }
+
+    function printDebug() {
+        textAreaDebug.value = robots.map(x => x.map(y => y.map(z => Math.round(z * 10) / 10 ))).map(x => JSON.stringify(x)).join("\n")
+            + `\n\nT = ${((currentTime - startTime) / 1000).toFixed(1)}s`;
+    }
+
+    function renderRobots() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        robots
+            .map(x => x[2])
+            .forEach(xy => {
+                [x, y] = xy;
+                ctx.fillStyle = "rgba(0, 127, 0, 0.5)";
+                ctx.fillRect(x * ROBOT_SIZE, y * ROBOT_SIZE, ROBOT_SIZE, ROBOT_SIZE);
+            });
+    }
+
+    buttonRun.addEventListener('click', run);
+
+    buttonStop.addEventListener('click', () => {
+        isRunning = false;
+        buttonRun.removeAttribute('disabled')
+        buttonStop.setAttribute('disabled', 'disabled');
+        textArea.removeAttribute('readonly');
+    });
+
+    run();
+</script>
+</body>
+</html>
