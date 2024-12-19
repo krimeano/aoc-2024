@@ -7,6 +7,27 @@ public class Day19x2 extends Day19x1 {
 
     @Override
     public int solve(String textInput) {
-        return super.solve(textInput);
+        parseInput(getLines(textInput, true));
+        if (verbose) {
+            System.out.println(patterns);
+            for (String design : designs) {
+                System.out.println(design);
+            }
+        }
+        long result = 0L;
+
+        for (String design : designs) {
+            result += waysToKnit(design);
+        }
+
+        if (verbose) {
+            for (String design : designs) {
+                System.out.println(design + " -> " + cachedResults.get(design));
+            }
+        }
+
+        System.out.println(result);
+        return (int) result;
+
     }
 }

@@ -2,15 +2,12 @@ package krimeano.aoc2024.days.day19;
 
 import krimeano.aoc2024.days.my_lib.SolveDay;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Day19x1 extends SolveDay {
-    List<String> patterns;
-    List<String> designs;
-    Map<String, Boolean> cachedResults;
+    protected List<String> patterns;
+    protected List<String> designs;
+    protected Map<String, Long> cachedResults;
 
     public Day19x1(boolean verbose) {
         super(verbose);
@@ -24,7 +21,7 @@ public class Day19x1 extends SolveDay {
         }
         int result = 0;
         for (String design : designs) {
-            if (canKnit(design)) {
+            if (waysToKnit(design) > 0) {
                 result++;
             }
         }
@@ -44,29 +41,38 @@ public class Day19x1 extends SolveDay {
             }
 
             if (!isSecondPart) {
-                for (String pattern : line.split(", ")) {
-                    patterns.add(pattern);
-                    cachedResults.put(pattern, true);
-                }
+                patterns.addAll(Arrays.asList(line.split(", ")));
             } else {
                 designs.add(line);
             }
         }
+
+        cachedResults.put("", 1L);
     }
 
-    protected boolean canKnit(String design) {
-        return canKnit(design, "");
+    public long waysToKnit(String design) {
+        if (verbose) {
+            System.out.println();
+        }
+        return waysToKnit(design, "");
     }
 
-    protected boolean canKnit(String design, String verbosePrefix) {
+    protected long waysToKnit(String design, String verbosePrefix) {
         if (cachedResults.containsKey(design)) {
-            boolean canBeKnitted = cachedResults.get(design);
+            long ways = cachedResults.get(design);
+
             if (verbose) {
                 System.out.print(verbosePrefix);
-                System.out.println("CACHED " + design + " > " + canBeKnitted);
+                System.out.println("CACHED " + design + " > " + ways);
             }
-            return canBeKnitted;
+            return ways;
+        } else if (verbose) {
+            System.out.print(verbosePrefix);
+            System.out.println("CHECKING " + design);
         }
+
+        long totalWays = 0;
+
         for (String pattern : patterns) {
             if (design.startsWith(pattern)) {
                 String remainder = design.substring(pattern.length());
@@ -75,18 +81,17 @@ public class Day19x1 extends SolveDay {
                     System.out.print(verbosePrefix);
                     System.out.println(pattern + " + " + remainder + " = " + design);
                 }
-
-                if (canKnit(remainder, verbosePrefix + "    ")) {
-                    cachedResults.put(design, true);
-                    return true;
-                }
+                totalWays += waysToKnit(remainder, verbosePrefix + "    ");
             }
         }
+
         if (verbose) {
             System.out.print(verbosePrefix);
-            System.out.println("\"" + design + "\" CAN'T BE KNITTED");
+            System.out.println("CACHING " + design + " < " + totalWays);
         }
-        cachedResults.put(design, false);
-        return false;
+
+        cachedResults.put(design, totalWays);
+
+        return totalWays;
     }
 }
