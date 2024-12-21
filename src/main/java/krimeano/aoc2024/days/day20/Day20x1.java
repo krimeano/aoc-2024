@@ -5,18 +5,17 @@ import krimeano.aoc2024.days.my_lib.SolveDay;
 import java.util.*;
 
 public class Day20x1 extends SolveDay {
-    static final char START = 'S';
-    static final char END = 'E';
-    static final char WALL = '#';
-    static final char SPACE = '.';
-    static final int[][] DIRECTIONS = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}}; // >, v, <, ^
-    Map<List<Integer>, Cell> cells;
-    Map<List<Integer>, Cell> walls;
-    List<String> racetrack;
-    int size;
-
-    List<Integer> start;
-    List<Integer> end;
+    protected static final int CHEAT_LIMIT = 2;
+    protected static final char START = 'S';
+    protected static final char END = 'E';
+    protected static final char WALL = '#';
+    protected static final char SPACE = '.';
+    protected static final int[][] DIRECTIONS = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}}; // >, v, <, ^
+    protected Map<List<Integer>, Cell> cells;
+    protected List<String> racetrack;
+    protected int size;
+    protected List<Integer> start;
+    protected List<Integer> end;
 
     public Day20x1(boolean verbose) {
         super(verbose);
@@ -38,7 +37,6 @@ public class Day20x1 extends SolveDay {
         size = racetrack.size();
         int maxSteps = size * size;
         cells = new HashMap<>();
-        walls = new HashMap<>();
         Cell cell;
 
         for (int i = 0; i < size; i++) {
@@ -52,11 +50,7 @@ public class Day20x1 extends SolveDay {
                     cell = new Cell(index, maxSteps);
                 }
 
-                if (c == WALL) {
-                    if (canBeCheated(i, j)) {
-                        walls.put(index, cell);
-                    }
-                } else {
+                if (c != WALL) {
                     cells.put(index, cell);
                     if (c == END) {
                         end = index;
@@ -67,18 +61,6 @@ public class Day20x1 extends SolveDay {
         }
     }
 
-    protected boolean canBeCheated(int row, int col) {
-        if (row == 0 || row == size - 1 || col == 0 || col == size - 1 || racetrack.get(row).charAt(col) != WALL) {
-            return false;
-        }
-
-        for (int[] direction : DIRECTIONS) {
-            if (racetrack.get(row + direction[0]).charAt(col + direction[1]) == WALL) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     protected void findPath() {
         Set<List<Integer>> wave = new HashSet<>();
@@ -101,26 +83,33 @@ public class Day20x1 extends SolveDay {
     }
 
     protected int findCheats(int threshold) {
+        return findCheats(threshold, CHEAT_LIMIT);
+    }
+
+    protected int findCheats(int threshold, int cheatLimit) {
         int endScore = cells.get(end).score;
         if (verbose) {
             System.out.println("endScore: " + endScore);
         }
         int foundCheats = 0;
+        System.out.println("cheatLimit: " + cheatLimit);
         for (Cell cell : cells.values()) {
-            for (int[] direction : DIRECTIONS) {
-                Cell nextWall = walls.get(Arrays.asList(cell.index.get(0) + direction[0], cell.index.get(1) + direction[1]));
-                if (nextWall == null) {
-                    continue;
-                }
-                for (int[] cheatDirection : DIRECTIONS) {
-                    Cell nextCell = cells.get(Arrays.asList(nextWall.index.get(0) + cheatDirection[0], nextWall.index.get(1) + cheatDirection[1]));
+            for (int i = -cheatLimit; i <= cheatLimit; i++) {
+                int orthogonalLimit = cheatLimit - Math.abs(i);
+                for (int j = -orthogonalLimit; j <= orthogonalLimit; j++) {
+                    int cheatSize = Math.abs(i) + Math.abs(j);
+                    int row = cell.index.get(0) + i;
+                    int col = cell.index.get(1) + j;
+                    Cell nextCell = cells.get(Arrays.asList(row, col));
                     if (nextCell == null) {
                         continue;
                     }
-                    int cheatScore = nextCell.score - cell.score - 2;
+
+                    int cheatScore = nextCell.score - cell.score - cheatSize;
+
                     if (cheatScore >= threshold) {
                         if (verbose) {
-                            System.out.println("CHEAT: " + nextWall.index + " > " + nextCell.index + " = " + cheatScore);
+                            System.out.println("CHEAT: " + cell.index + " > " + i + ", " + j + " > " + nextCell.index + " = " + cheatScore);
                         }
                         foundCheats++;
                     }
