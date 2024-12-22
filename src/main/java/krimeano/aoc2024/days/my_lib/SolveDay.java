@@ -35,7 +35,7 @@ public abstract class SolveDay implements SolveDayInterface {
     }
 
     protected ArrayList<String> getLines(String textInput, boolean keepEmpty) {
-        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> lines = new ArrayList<>();
 
         for (String line : textInput.split("\n")) {
             String trimmedLine = line.trim();
@@ -43,6 +43,14 @@ public abstract class SolveDay implements SolveDayInterface {
             if (keepEmpty || !trimmedLine.isEmpty()) {
                 lines.add(trimmedLine);
             }
+        }
+        return lines;
+    }
+
+    protected ArrayList<Integer> getLinesAsNumbers(String textInput) {
+        ArrayList<Integer> lines = new ArrayList<>();
+        for (String line : getLines(textInput)) {
+            lines.add(Integer.parseInt(line));
         }
         return lines;
     }
