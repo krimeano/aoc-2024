@@ -7,7 +7,7 @@ import java.util.*;
 public class Day24x1 extends SolveDay {
     Map<String, Integer> wires = new HashMap<>();
     Map<String, List<String>> gatesMap;
-    List<List<String>> sortedGates;
+    List<String> sortedGateWires;
 
     public Day24x1(boolean verbose) {
         super(verbose);
@@ -46,13 +46,8 @@ public class Day24x1 extends SolveDay {
                 String[] parts = line.split(": ");
                 wires.put(parts[0], Integer.parseInt(parts[1]));
             } else {
-                String[] parts = line.split(" ");
-                List<String> gate = new ArrayList<>();
-                gate.add(parts[0]);
-                gate.add(parts[1]);
-                gate.add(parts[2]);
-                gate.add(parts[4]);
-                gatesMap.put(parts[4], gate);
+                String[] parts = line.split(" -> ");
+                gatesMap.put(parts[1], Arrays.asList(parts[0].split(" ")));
             }
         }
     }
@@ -69,15 +64,15 @@ public class Day24x1 extends SolveDay {
     }
 
     protected void sortGates() {
-        sortedGates = new ArrayList<>();
+
         Map<String, Set<String>> children = new HashMap<>();
         Map<String, Integer> dependsOnCount = new HashMap<>();
         List<String> zeroes = new ArrayList<>();
 
-        for (List<String> gate : gatesMap.values()) {
+        for (String keyZ : gatesMap.keySet()) {
+            List<String> gate = gatesMap.get(keyZ);
             String keyX = gate.get(0);
             String keyY = gate.get(2);
-            String keyZ = gate.get(3);
 
             children.putIfAbsent(keyX, new HashSet<>());
             children.get(keyX).add(keyZ);
@@ -95,9 +90,13 @@ public class Day24x1 extends SolveDay {
             }
         }
 
+        sortedGateWires = new ArrayList<>();
+
         while (!zeroes.isEmpty()) {
             String keyZ = zeroes.removeFirst();
-            sortedGates.add(gatesMap.get(keyZ));
+
+            sortedGateWires.add(keyZ);
+
             if (children.containsKey(keyZ)) {
                 for (String child : children.get(keyZ)) {
                     int newCount = dependsOnCount.get(child) - 1;
@@ -111,12 +110,11 @@ public class Day24x1 extends SolveDay {
     }
 
     protected void connectWires() {
-        for (List<String> gate : sortedGates) {
-
+        for (String keyZ : sortedGateWires) {
+            List<String> gate = gatesMap.get(keyZ);
             String keyX = gate.get(0);
             String operation = gate.get(1);
             String keyY = gate.get(2);
-            String keyZ = gate.get(3);
 
             int x = wires.getOrDefault(keyX, 0);
             int y = wires.getOrDefault(keyY, 0);
