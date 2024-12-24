@@ -88,8 +88,10 @@ public class Day24x1 extends SolveDay {
             if (parents == 0) {
                 zeroes.add(keyZ);
             }
+
         }
 
+        zeroes.sort((keyX, keyY) -> gatesMap.get(keyX).getFirst().compareTo(gatesMap.get(keyY).getFirst()));
         sortedGateWires = new ArrayList<>();
 
         while (!zeroes.isEmpty()) {
@@ -111,7 +113,7 @@ public class Day24x1 extends SolveDay {
 
     protected void connectWires() {
         for (String keyZ : sortedGateWires) {
-            List<String> gate = gatesMap.get(keyZ);
+            List<String> gate = getGate(keyZ);
             String keyX = gate.get(0);
             String operation = gate.get(1);
             String keyY = gate.get(2);
@@ -132,5 +134,9 @@ public class Day24x1 extends SolveDay {
             }
             wires.put(keyZ, value);
         }
+    }
+
+    protected List<String> getGate(String key) {
+        return gatesMap.get(key);
     }
 }
