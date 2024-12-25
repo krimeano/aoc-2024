@@ -9,6 +9,7 @@ public class Day24x2 extends SolveDay {
     Map<String, Set<String>> parentsMap;
     Map<String, Set<String>> childrenMap;
     List<List<String>> tiers;
+    List<OpAmp> chips;
 
     public Day24x2(boolean verbose) {
         super(verbose);
@@ -17,13 +18,26 @@ public class Day24x2 extends SolveDay {
     @Override
     public int solve(String textInput) {
         readData(textInput);
-        sortGates();
-//        for (String key : parentsMap.keySet()) {
-//            System.out.println(key + " < " + parentsMap.get(key));
-//        }
-//        for (String key : childrenMap.keySet()) {
-//            System.out.println(key + " > " + childrenMap.get(key));
-//        }
+        swapGates("z12", "kth");
+        swapGates("z26", "gsd");
+
+        chips = new ArrayList<>();
+        OpAmp prevChip = null;
+        for (int i = 0; i < inputs.size() / 2; i++) {
+
+            OpAmp chip = new OpAmp(i, childrenMap, parentsMap);
+            chips.add(chip);
+            if (prevChip != null) {
+                if (!chip.u.equals(prevChip.w)) {
+                    System.out.println("WRONG INPUT OUTPUT!");
+                }
+            }
+            System.out.println(chip);
+            chip.printVerbose(childrenMap, parentsMap);
+            prevChip = chip;
+        }
+        printGrandparents();
+//        sortGates();
         return -1;
     }
 
@@ -60,6 +74,22 @@ public class Day24x2 extends SolveDay {
         }
 
         inputs.sort(Comparator.comparing(x -> x.substring(1)));
+    }
+
+    protected void swapGates(String a, String b) {
+        Set<String> tmpParents = parentsMap.get(a);
+        parentsMap.put(a, parentsMap.get(b));
+        parentsMap.put(b, tmpParents);
+
+        for (String parent : parentsMap.get(a)) {
+            childrenMap.get(parent).remove(b);
+            childrenMap.get(parent).add(a);
+        }
+
+        for (String parent : parentsMap.get(b)) {
+            childrenMap.get(parent).remove(a);
+            childrenMap.get(parent).add(b);
+        }
     }
 
     protected void sortGates() {
@@ -115,4 +145,45 @@ public class Day24x2 extends SolveDay {
             System.out.println();
         }
     }
+
+    protected void printGrandparents() {
+        Map<String, Set<String>> grandParentsMap = new HashMap<>();
+        List<String> wave = new ArrayList<>();
+
+        for (String inputKey : inputs) {
+            for (String child : childrenMap.get(inputKey)) {
+                if (!wave.contains(child)) {
+                    wave.add(child);
+                }
+                grandParentsMap.putIfAbsent(child, new HashSet<>());
+                grandParentsMap.get(child).add(inputKey);
+            }
+        }
+//        System.out.println(wave);
+        while (!wave.isEmpty()) {
+            String key = wave.removeFirst();
+//            System.out.println(key);
+            if (childrenMap.containsKey(key)) {
+                for (String child : childrenMap.get(key)) {
+                    if (!wave.contains(child)) {
+                        wave.add(child);
+                    }
+                    grandParentsMap.putIfAbsent(child, new HashSet<>());
+                    grandParentsMap.get(child).addAll(grandParentsMap.get(key));
+                }
+            }
+        }
+
+        List<String> keys = new ArrayList(grandParentsMap.keySet());
+        keys.sort(Comparator.naturalOrder());
+        for (String key : keys) {
+            if (!key.startsWith("z")) {
+                continue;
+            }
+            List<String> gp = new ArrayList<>(grandParentsMap.get(key));
+            gp.sort(Comparator.naturalOrder());
+            System.out.println(key + " > " + gp.size() + " : " + gp);
+        }
+    }
+
 }
