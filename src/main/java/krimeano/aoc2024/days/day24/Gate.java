@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class Gate {
-    public class UnknownGateTypeException extends RuntimeException {
+    public static class UnknownGateTypeException extends RuntimeException {
         public UnknownGateTypeException(String message) {
         }
     }
@@ -17,17 +17,19 @@ public class Gate {
         UNKNOWN
     }
 
-    final Set<Wire> inputs;
+    final Set<String> inputs;
     final GateType type;
-    Wire output;
+    String output;
+    private final Wire.Factory wireFactory;
 
     public Gate(String initString, Wire.Factory wireFactory) {
+        this.wireFactory = wireFactory;
         String[] parts = initString.split(" -> ");
         String[] tokens = parts[0].split(" ");
 
         inputs = new HashSet<>();
-        inputs.add(wireFactory.getWire(tokens[0]));
-        inputs.add(wireFactory.getWire(tokens[2]));
+        inputs.add(wireFactory.getWire(tokens[0]).key);
+        inputs.add(wireFactory.getWire(tokens[2]).key);
 
         type = switch (tokens[1]) {
             case "AND" -> GateType.AND;
@@ -36,19 +38,19 @@ public class Gate {
             default -> GateType.UNKNOWN;
         };
 
-        output = wireFactory.getWire(parts[1]);
+        output = wireFactory.getWire(parts[1]).key;
     }
 
     public void connect() {
-        Iterator<Wire> iterator = inputs.iterator();
-        Wire wireX = iterator.next();
-        Wire wireY = iterator.next();
+        Iterator<String> iterator = inputs.iterator();
+        String wireX = iterator.next();
+        String wireY = iterator.next();
 
         try {
-            int x = wireX.getValue();
-            int y = wireY.getValue();
+            int x = wireFactory.getWire(wireX).getValue();
+            int y = wireFactory.getWire(wireY).getValue();
 
-            this.output.setValue(switch (type) {
+            wireFactory.getWire(output).setValue(switch (type) {
                 case GateType.AND -> x & y;
                 case GateType.OR -> x | y;
                 case GateType.XOR -> x ^ y;
@@ -64,15 +66,9 @@ public class Gate {
 
     @Override
     public String toString() {
-        Iterator<Wire> iterator = inputs.iterator();
-        return String.format("Gate[%s %s %s > %s]", iterator.next().key, toShortString(), iterator.next().key, output.key);
-    }
-
-    public String toVerboseString() {
-        Iterator<Wire> iterator = inputs.iterator();
+        Iterator<String> iterator = inputs.iterator();
         return String.format("Gate[%s %s %s > %s]", iterator.next(), toShortString(), iterator.next(), output);
     }
-
 
     public String toShortString() {
         return switch (type) {

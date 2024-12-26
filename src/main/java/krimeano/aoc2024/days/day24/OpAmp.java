@@ -1,119 +1,110 @@
 package krimeano.aoc2024.days.day24;
 
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class OpAmp {
-    public static final String UNKNOWN = "<?>";
-    public static final String EMPTY = "---";
-    public static final String WIRE_FORMAT = "%s%02d";
+    private static final String UNKNOWN = "<?>";
+    private static final String EMPTY = "---";
+    private static final String WIRE_FORMAT = "%s%02d";
+
     public int ix;
 
     /* x,y -> a, b */
-    public String x;
+    public final String x;
 
     /* x,y -> a, b */
-    public String y;
+    public final String y;
 
     /* a,u -> c, z */
     public String u = UNKNOWN;
 
     /* x,y -> a, b */
     /* a,u -> c, z */
-    public String a = UNKNOWN;
+    private String a = UNKNOWN;
 
     /* x,y -> a, b */
     /* b,c -> w */
-    public String b = UNKNOWN;
+    private String b = UNKNOWN;
 
     /* a,u -> c, z */
     /* b,c -> w */
-    public String c = UNKNOWN;
+    private String c = UNKNOWN;
 
     /* b,c -> w */
     public String w = UNKNOWN;
 
-    public String z;
+    public final String z;
 
-    public Set<String> xyTo;
-    public Set<String> zFrom;
+    private Gate xyToA;
+    private Gate xyToB;
+    private final Gate auToZ;
+    private Gate auToC;
+    private Gate bcToW;
 
-    public OpAmp(int ix, Map<String, Set<String>> childrenMap, Map<String, Set<String>> parentsMap) {
+    public OpAmp(int ix, HashMap<String, Set<Gate>> wireToGate, HashMap<String, Gate> wireFromGate) {
         this.ix = ix;
         x = String.format(WIRE_FORMAT, 'x', ix);
         y = String.format(WIRE_FORMAT, 'y', ix);
         z = String.format(WIRE_FORMAT, 'z', ix);
-        xyTo = new HashSet<>(childrenMap.get(x));
-        zFrom = new HashSet<>(parentsMap.get(z));
+
+        auToZ = wireFromGate.get(z);
+        Set<Gate> xyToAOrB = new HashSet<>(wireToGate.get(x));
 
         if (ix == 0) {
+            xyToA = auToZ;
             u = EMPTY;
             a = EMPTY;
             b = EMPTY;
             c = EMPTY;
-
-            for (String m : xyTo) {
-                if (!m.equals(z)) {
-                    w = m;
-                }
-            }
+            xyToAOrB.remove(auToZ);
+            bcToW = xyToAOrB.iterator().next();
+            xyToB = bcToW;
+            w = bcToW.output;
         } else {
-            for (String m : xyTo) {
-                if (zFrom.contains(m)) {
-                    a = m;
+            for (Gate gate : xyToAOrB) {
+                if (auToZ.inputs.contains(gate.output)) {
+                    a = gate.output;
+                    xyToA = gate;
                 }
             }
 
             if (!a.equals(UNKNOWN)) {
                 Set<String> tmp;
+                Set<Gate> tmpGates;
 
-                tmp = new HashSet<>(zFrom);
+                xyToAOrB.remove(xyToA);
+                xyToB = xyToAOrB.iterator().next();
+                b = xyToB.output;
+
+                tmp = new HashSet<>(auToZ.inputs);
                 tmp.remove(a);
                 u = tmp.iterator().next();
 
-                tmp = new HashSet<>(xyTo);
-                tmp.remove(a);
-                b = tmp.iterator().next();
+                tmpGates = new HashSet<>(wireToGate.get(a));
+                tmpGates.remove(auToZ);
+                if (!tmpGates.isEmpty()) {
+                    auToC = tmpGates.iterator().next();
+                    c = auToC.output;
+                }
 
-                w = childrenMap.get(b).iterator().next();
-
-                tmp = new HashSet<>(parentsMap.get(w));
-                tmp.remove(b);
-                c = tmp.iterator().next();
+                bcToW = wireToGate.get(b).iterator().next();
+                w = bcToW.output;
             }
 
-            if (childrenMap.getOrDefault(b, new HashSet<>()).size() != 1) {
-                System.out.println("!!! " + b + " SHOULD HAVE ONLY 1 CHILD");
-            }
-            if (childrenMap.getOrDefault(c, new HashSet<>()).size() != 1) {
-                System.out.println("!!! " + c + " SHOULD HAVE ONLY 1 CHILD");
-            }
         }
-
     }
 
     @Override
     public String toString() {
-        return String.format("          %s\n%s > %s  v  %s\n%s > %s %s\n          %s\n", u, x, a, z, y, b, c, w);
+        return String.format("            %s\n", u)
+                + String.format("%s %s %s      %2s %s\n", x, formatGate(xyToA), a, formatGate(auToZ), z)
+                + String.format("%s %s %s %s %s\n", y, formatGate(xyToB), b, formatGate(auToC), c)
+                + String.format("          %s %s\n", formatGate(bcToW), w);
     }
 
-    public void printVerbose(Map<String, Set<String>> childrenMap, Map<String, Set<String>> parentsMap) {
-        printItem(x, childrenMap, parentsMap);
-        printItem(y, childrenMap, parentsMap);
-        printItem(a, childrenMap, parentsMap);
-        printItem(b, childrenMap, parentsMap);
-        printItem(u, childrenMap, parentsMap);
-        printItem(z, childrenMap, parentsMap);
-        printItem(c, childrenMap, parentsMap);
-        printItem(w, childrenMap, parentsMap);
-        System.out.println();
+    protected String formatGate(Gate gate) {
+        return gate == null ? "?" : gate.toShortString();
     }
-
-    private void printItem(String item, Map<String, Set<String>> childrenMap, Map<String, Set<String>> parentsMap) {
-        if (!item.equals(EMPTY) && !item.equals(UNKNOWN)) {
-            System.out.println(parentsMap.getOrDefault(item, new HashSet<>()) + " > " + item + " > " + childrenMap.getOrDefault(item, new HashSet<>()));
-        }
-    }
-
 }

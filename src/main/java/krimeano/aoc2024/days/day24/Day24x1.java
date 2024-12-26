@@ -7,11 +7,11 @@ import java.util.*;
 public class Day24x1 extends SolveDay {
     Wire.Factory wireFactory;
 
-    Set<Wire> inputs;
-    Set<Wire> outputs;
+    Set<String> inputs;
+    Set<String> outputs;
 
-    HashMap<Wire, Set<Gate>> wireToGate;
-    HashMap<Wire, Gate> wireFromGate;
+    HashMap<String, Set<Gate>> wireToGate;
+    HashMap<String, Gate> wireFromGate;
 
     public Day24x1(boolean verbose) {
         super(verbose);
@@ -19,11 +19,6 @@ public class Day24x1 extends SolveDay {
 
     @Override
     public int solve(String textInput) {
-        inputs = new HashSet<>();
-        outputs = new HashSet<>();
-        wireFactory = new Wire.Factory();
-        wireToGate = new HashMap<>();
-        wireFromGate = new HashMap<>();
         readData(textInput);
         connectWires();
 
@@ -34,8 +29,8 @@ public class Day24x1 extends SolveDay {
 
         try {
             long result = 0;
-            for (Wire wire : outputs) {
-                result |= wire.getBitValue();
+            for (String wire : outputs) {
+                result |= wireFactory.getWire(wire).getBitValue();
             }
             System.out.println("Day24x1: " + result);
             return (int) result;
@@ -46,27 +41,34 @@ public class Day24x1 extends SolveDay {
     }
 
     protected void readData(String textInput) {
+        inputs = new HashSet<>();
+        outputs = new HashSet<>();
+        wireFactory = new Wire.Factory();
+        wireToGate = new HashMap<>();
+        wireFromGate = new HashMap<>();
         boolean isInitWires = true;
+
         for (String line : getLines(textInput, true)) {
             if (line.isEmpty()) {
                 isInitWires = false;
                 continue;
             }
+
             if (isInitWires) {
                 Wire wire = wireFactory.getWire(line);
-                inputs.add(wire);
+                inputs.add(wire.key);
                 if (verbose) {
                     System.out.println(wire);
                 }
+
             } else {
                 Gate gate = new Gate(line, wireFactory);
-                for (Wire wire : gate.inputs) {
-                    wireToGate.putIfAbsent(wire, new HashSet<>());
-                    wireToGate.get(wire).add(gate);
+                for (String key : gate.inputs) {
+                    wireToGate.putIfAbsent(key, new HashSet<>());
+                    wireToGate.get(key).add(gate);
                 }
                 wireFromGate.put(gate.output, gate);
-                if (gate.output.key.startsWith("z")) {
-                    ;
+                if (gate.output.startsWith("z")) {
                     outputs.add(gate.output);
                 }
                 if (verbose) {
@@ -77,14 +79,14 @@ public class Day24x1 extends SolveDay {
     }
 
     protected void connectWires() {
-        List<Wire> wave = new ArrayList<>(inputs);
+        List<String> wave = new ArrayList<>(inputs);
         while (!wave.isEmpty()) {
-            List<Wire> newWave = new ArrayList<>();
-            for (Wire wire : wave) {
-                if (wireToGate.containsKey(wire)) {
-                    for (Gate gate : wireToGate.get(wire)) {
+            List<String> newWave = new ArrayList<>();
+            for (String key : wave) {
+                if (wireToGate.containsKey(key)) {
+                    for (Gate gate : wireToGate.get(key)) {
                         gate.connect();
-                        if (gate.output.isDefined() && !newWave.contains(gate.output)) {
+                        if (wireFactory.getWire(gate.output).isDefined() && !newWave.contains(gate.output)) {
                             newWave.add(gate.output);
                         }
                     }
