@@ -107,4 +107,29 @@ public class OpAmp {
     protected String formatGate(Gate gate) {
         return gate == null ? "?" : gate.toShortString();
     }
+
+    public String toVerboseString() {
+        StringBuilder sb = new StringBuilder();
+        if (xyToA != null) {
+            sb.append(xyToA);
+            sb.append("\n");
+        }
+        if (xyToB != null) {
+            sb.append(xyToB);
+            sb.append("\n");
+        }
+        if (auToZ != null) {
+            sb.append(auToZ);
+            sb.append("\n");
+        }
+        if (auToC != null) {
+            sb.append(auToC);
+            sb.append("\n");
+        }
+        if (bcToW != null) {
+            sb.append(bcToW);
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
 }
