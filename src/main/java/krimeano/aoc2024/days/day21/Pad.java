@@ -95,6 +95,13 @@ public class Pad {
                 }
             }
         }
+        for (char d : paths.keySet()) {
+            Set<String> withSuffix = new HashSet<>();
+            for (String path : paths.get(d)) {
+                withSuffix.add(path + 'A');
+            }
+            paths.put(d, withSuffix);
+        }
         shortestPaths.put(c, paths);
     }
 
@@ -103,16 +110,7 @@ public class Pad {
     }
 
     public Set<String> getPaths(char c, char fromB) {
-        Set<String> paths = new HashSet<>();
-        if (shortestPaths.containsKey(fromB)) {
-            if (shortestPaths.get(fromB).containsKey(c)) {
-                for (String path : shortestPaths.get(fromB).get(c)) {
-                    paths.add(String.format("%sA", path));
-                }
-            }
-        }
-        return paths;
-
+        return shortestPaths.get(fromB).get(c);
     }
 
 }

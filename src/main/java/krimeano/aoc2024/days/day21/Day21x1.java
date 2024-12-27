@@ -25,19 +25,14 @@ public class Day21x1 extends SolveDay {
 
     public Day21x1(boolean verbose) {
         super(verbose);
-//        System.out.println(keyPad.positions);
-//        System.out.println(numPad.positions);
     }
 
     @Override
     public int solve(String textInput) {
         int result = 0;
         for (String line : getLines(textInput)) {
-//            System.out.println(line);
             int numericCode = getNumericCode(line);
-//            System.out.print(numericCode);
             int pathLength = countForCode(line);
-//            System.out.println(pathLength);
             result += numericCode * pathLength;
         }
         return result;
@@ -55,19 +50,8 @@ public class Day21x1 extends SolveDay {
         char prevC = 'A';
         int result = 0;
         for (char c : code.toCharArray()) {
-//            System.out.println(prevC + "->" + c + ": " + numPad.getPaths(c, prevC));
-//            result += f(3, numPad.getPaths(c, prevC));
-            Set<String> paths = findAllPaths(2, numPad.getPaths(c, prevC));
-//            System.out.println(paths.size());
-            int minLength = Integer.MAX_VALUE;
-            String minPath = "";
-            for (String path : paths) {
-                if (path.length() < minLength) {
-                    minLength = path.length();
-                    minPath = path;
-                }
-            }
-//            System.out.println(prevC + "->" + c + ": " + minLength + ":" + minPath);
+            System.out.println(prevC + "->" + c + ": " + numPad.getPaths(c, prevC));
+            int minLength = f(2, numPad.getPaths(c, prevC));
             prevC = c;
             result += minLength;
         }
@@ -96,71 +80,9 @@ public class Day21x1 extends SolveDay {
         char prevC = 'A';
         int result = 0;
         for (char c : path.toCharArray()) {
-            result += f(depth, c, prevC);
+            result += f(depth - 1, keyPad.getPaths(c, prevC));
             prevC = c;
         }
         return result;
     }
-
-    protected int f(int depth, char step, char prevStep) {
-        if (depth == 0) {
-            return 1;
-        }
-        return f(depth - 1, keyPad.getPaths(step, prevStep));
-    }
-
-    protected Set<String> findAllPaths(int depth, Set<String> paths) {
-//        System.out.println("findAllPaths_0 " + depth + ", " + paths);
-        if (depth == 0) {
-            return new HashSet<>(paths);
-        }
-
-        Set<String> result = new HashSet<>();
-        for (String path : paths) {
-            result.addAll(findAllPaths(depth, path));
-        }
-        return result;
-    }
-
-    protected Set<String> findAllPaths(int depth, String path) {
-//        System.out.println("findAllPaths_1 " + depth + ", " + path);
-        Set<String> result = new HashSet<>();
-
-        if (depth == 0) {
-            result.add(path);
-            return result;
-        }
-        char prevC = 'A';
-
-        List<String> foundPaths = new ArrayList<>();
-
-        foundPaths.add("");
-
-        for (char c : path.toCharArray()) {
-            List<String> prefixes = new ArrayList<>();
-            for (String suffix : findAllPaths(depth, c, prevC)) {
-                for (String prefix : foundPaths) {
-                    prefixes.add(prefix + suffix);
-                }
-            }
-            foundPaths = prefixes;
-            prevC = c;
-        }
-
-        result.addAll(foundPaths);
-
-        return result;
-    }
-
-
-    protected Set<String> findAllPaths(int depth, char step, char prevStep) {
-//        System.out.println("findAllPaths_2 " + depth + ", " + step + ", " + prevStep);
-        if (depth == 0) {
-            Set<String> result = new HashSet<>();
-            result.add(String.valueOf(step));
-            return result;
-        }
-        return findAllPaths(depth - 1, keyPad.getPaths(step, prevStep));
-    }
-
 }
