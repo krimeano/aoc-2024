@@ -27,6 +27,7 @@ public class Pad {
         for (char c : positions.keySet()) {
             findShortestPaths(c);
         }
+        System.out.println(shortestPaths);
 
     }
 
@@ -39,6 +40,7 @@ public class Pad {
         }
         return out;
     }
+
 
     private void findShortestPaths(char c) {
         if (c == 'X') {
@@ -93,8 +95,24 @@ public class Pad {
                 }
             }
         }
-
-        System.out.println(c + ": " + paths);
         shortestPaths.put(c, paths);
     }
+
+    public Set<String> getPaths(char c) {
+        return getPaths(c, 'A');
+    }
+
+    public Set<String> getPaths(char c, char fromB) {
+        Set<String> paths = new HashSet<>();
+        if (shortestPaths.containsKey(fromB)) {
+            if (shortestPaths.get(fromB).containsKey(c)) {
+                for (String path : shortestPaths.get(fromB).get(c)) {
+                    paths.add(String.format("%sA", path));
+                }
+            }
+        }
+        return paths;
+
+    }
+
 }
