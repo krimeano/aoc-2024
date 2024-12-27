@@ -27,7 +27,7 @@ public class Pad {
         for (char c : positions.keySet()) {
             findShortestPaths(c);
         }
-        System.out.println(shortestPaths);
+//        System.out.println(shortestPaths);
 
     }
 

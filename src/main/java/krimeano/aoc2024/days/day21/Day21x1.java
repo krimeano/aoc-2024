@@ -33,11 +33,11 @@ public class Day21x1 extends SolveDay {
     public int solve(String textInput) {
         int result = 0;
         for (String line : getLines(textInput)) {
-            System.out.println(line);
+//            System.out.println(line);
             int numericCode = getNumericCode(line);
-            System.out.print(numericCode);
+//            System.out.print(numericCode);
             int pathLength = countForCode(line);
-            System.out.println(pathLength);
+//            System.out.println(pathLength);
             result += numericCode * pathLength;
         }
         return result;
