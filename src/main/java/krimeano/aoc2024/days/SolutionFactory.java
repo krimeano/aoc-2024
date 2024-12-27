@@ -43,6 +43,7 @@ import krimeano.aoc2024.days.day19.Day19x2;
 import krimeano.aoc2024.days.day20.Day20x1;
 import krimeano.aoc2024.days.day20.Day20x2;
 import krimeano.aoc2024.days.day21.Day21x1;
+import krimeano.aoc2024.days.day21.Day21x2;
 import krimeano.aoc2024.days.day22.Day22x1;
 import krimeano.aoc2024.days.day22.Day22x2;
 import krimeano.aoc2024.days.day23.Day23x1;
@@ -105,7 +106,7 @@ public class SolutionFactory {
             case 20:
                 return new SolveDay[]{new Day20x1(verbose), new Day20x2(verbose)};
             case 21:
-                return new SolveDay[]{new Day21x1(verbose)};
+                return new SolveDay[]{new Day21x1(verbose), new Day21x2(verbose)};
             case 22:
                 return new SolveDay[]{new Day22x1(verbose), new Day22x2(verbose)};
             case 23:

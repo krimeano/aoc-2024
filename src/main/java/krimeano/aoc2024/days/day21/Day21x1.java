@@ -2,9 +2,8 @@ package krimeano.aoc2024.days.day21;
 
 import krimeano.aoc2024.days.my_lib.SolveDay;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /*
@@ -22,6 +21,8 @@ X^A
 public class Day21x1 extends SolveDay {
     Pad keyPad = new KeyPad();
     Pad numPad = new NumPad();
+    protected Map<String, Long> cached = new HashMap<>();
+    protected int robots = 2;
 
     public Day21x1(boolean verbose) {
         super(verbose);
@@ -29,13 +30,14 @@ public class Day21x1 extends SolveDay {
 
     @Override
     public int solve(String textInput) {
-        int result = 0;
+        long result = 0;
         for (String line : getLines(textInput)) {
             int numericCode = getNumericCode(line);
-            int pathLength = countForCode(line);
-            result += numericCode * pathLength;
+            long pathLength = countForCode(line);
+            result += (long) numericCode * pathLength;
         }
-        return result;
+        System.out.println("(long) " + result);
+        return (int) result;
     }
 
     protected int getNumericCode(String code) {
@@ -46,18 +48,19 @@ public class Day21x1 extends SolveDay {
         return code.isEmpty() ? 0 : Integer.parseInt(code);
     }
 
-    protected int countForCode(String code) {
+    protected long countForCode(String code) {
         char prevC = 'A';
-        int result = 0;
+        long result = 0;
         for (char c : code.toCharArray()) {
-            System.out.println(prevC + "->" + c + ": " + numPad.getPaths(c, prevC));
-            int minLength = f(2, numPad.getPaths(c, prevC));
+            if (verbose) {
+                System.out.println(prevC + "->" + c + ": " + numPad.getPaths(c, prevC));
+            }
+            long minLength = f(robots, numPad.getPaths(c, prevC));
             prevC = c;
             result += minLength;
         }
         return result;
     }
-
 
     /**
      * F(0, 'any') = 1;
@@ -65,24 +68,29 @@ public class Day21x1 extends SolveDay {
      * G('X', 'W') = Pad.getPaths('X', 'W') = {"MNK", "OPQ"...};
      * F(depth, 'X', 'W') = F(depth-1, G('X', 'W')) = min(F(depth-1, "MNK"), F(depth-1, "OPQ")...);
      */
-    protected int f(int depth, Set<String> paths) {
-        int minResult = Integer.MAX_VALUE;
+    protected long f(int depth, Set<String> paths) {
+        long minResult = Long.MAX_VALUE;
         for (String path : paths) {
             minResult = Math.min(minResult, f(depth, path));
         }
         return minResult;
     }
 
-    protected int f(int depth, String path) {
+    protected long f(int depth, String path) {
         if (depth == 0) {
             return path.length();
         }
+        String key = depth + "-" + path;
+        if (cached.containsKey(key)) {
+            return cached.get(key);
+        }
         char prevC = 'A';
-        int result = 0;
+        long result = 0;
         for (char c : path.toCharArray()) {
             result += f(depth - 1, keyPad.getPaths(c, prevC));
             prevC = c;
         }
+        cached.put(key, result);
         return result;
     }
 }
